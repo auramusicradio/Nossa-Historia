@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Domínio Online - Multiplayer Profissional</title>
+  <title>Domínio Online - Salas Multiplayer</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * {
@@ -29,62 +29,106 @@
     }
     .hidden { display: none; }
 
+    /* Lobby com lista de salas */
     .lobby-container {
-      background: rgba(0, 0, 0, 0.65);
+      background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(12px);
       border-radius: 48px;
       padding: 32px 24px;
-      text-align: center;
-      max-width: 550px;
+      max-width: 800px;
       margin: 0 auto;
       border: 1px solid #ffd966aa;
     }
     .lobby-container h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: #ffdf8c;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .room-list {
+      background: #00000050;
+      border-radius: 32px;
+      padding: 16px;
+      margin: 20px 0;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .room-item {
+      background: #2c2a1eaa;
+      border-radius: 24px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 1px solid #c9a458;
+    }
+    .room-info {
+      flex: 2;
+    }
+    .room-name {
+      font-weight: bold;
+      color: #ffeaac;
+      font-size: 1.1rem;
+    }
+    .room-details {
+      font-size: 0.8rem;
+      color: #d4c28a;
+    }
+    .join-room-btn {
+      background: #4a7c59;
+      padding: 6px 16px;
+      font-size: 0.9rem;
+      margin: 0;
+      box-shadow: 0 2px 0 #2a4a35;
+    }
+    .create-room-form, .join-code-form {
+      background: #00000060;
+      border-radius: 28px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .form-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
       margin-bottom: 12px;
     }
-    .input-group {
-      margin: 20px 0;
-      text-align: left;
-    }
-    .input-group label {
-      display: block;
-      color: #f5e5b6;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 60px;
+    .form-row input, .form-row select {
+      flex: 1;
+      padding: 10px;
+      border-radius: 40px;
       border: none;
       background: #fff7e8;
-      font-size: 1rem;
+    }
+    .toggle-password {
+      background: #6b5a3e;
+      padding: 8px 16px;
+      font-size: 0.8rem;
     }
     button {
       background: #f5b042;
       border: none;
-      padding: 12px 20px;
+      padding: 10px 20px;
       border-radius: 60px;
       font-weight: bold;
-      font-size: 1rem;
       cursor: pointer;
-      transition: all 0.2s;
-      margin: 8px 6px;
-      box-shadow: 0 4px 0 #9b5818;
+      transition: 0.2s;
+      margin: 4px;
+      box-shadow: 0 3px 0 #9b5818;
     }
     button:active {
       transform: translateY(2px);
       box-shadow: 0 1px 0 #9b5818;
     }
-    .room-buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
+    .status-msg {
+      color: #ffdfaa;
+      text-align: center;
+      margin-top: 12px;
     }
-
+    /* Estilos do jogo (mesmo do anterior) */
     .game-chat-layout {
       display: flex;
       flex-wrap: wrap;
@@ -151,14 +195,12 @@
       height: 100px;
       border-radius: 12px;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       font-weight: bold;
       font-size: 1.7rem;
       box-shadow: 0 6px 12px black;
       border: 1px solid #b97f44;
-      transition: 0.1s linear;
     }
     .domino-hand {
       display: flex;
@@ -184,24 +226,6 @@
       justify-content: center;
       margin: 16px 0;
       flex-wrap: wrap;
-    }
-    .side-choice-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #2c2b26e6;
-      backdrop-filter: blur(16px);
-      padding: 20px;
-      border-radius: 32px;
-      z-index: 1000;
-      text-align: center;
-      border: 2px solid gold;
-    }
-    .side-choice-modal button {
-      margin: 10px;
-      padding: 12px 24px;
-      font-size: 1.2rem;
     }
     .chat-messages {
       flex: 1;
@@ -243,7 +267,6 @@
     }
     @media (max-width: 800px) {
       .domino-piece { width: 55px; height: 80px; font-size: 1.2rem; }
-      .player-card { font-size: 0.8rem; }
     }
     .status-text {
       background: #00000070;
@@ -254,30 +277,58 @@
       color: #ffdd99;
       margin-top: 12px;
     }
+    .side-choice-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #2c2b26e6;
+      backdrop-filter: blur(16px);
+      padding: 20px;
+      border-radius: 32px;
+      z-index: 1000;
+      text-align: center;
+      border: 2px solid gold;
+    }
   </style>
 </head>
 <body>
 <div id="app">
-  <!-- LOBBY -->
+  <!-- LOBBY PRINCIPAL COM LISTA DE SALAS -->
   <div id="lobbyScreen" class="screen lobby-container">
-    <h1>🎲 DOMÍNIO MULTI</h1>
-    <div class="input-group">
-      <label>👤 Seu nickname</label>
-      <input type="text" id="nicknameInput" placeholder="Ex: DomPlayer" maxlength="20">
+    <h1>🎲 DOMÍNIO MULTI - SALAS</h1>
+    <div class="room-list" id="roomListContainer">
+      <div style="text-align:center; color:#ffd58c;">Carregando salas...</div>
     </div>
-    <div class="room-buttons">
-      <button id="createRoomBtn">➕ Criar Sala</button>
-      <button id="joinRoomBtn">🔗 Entrar em Sala (código)</button>
+    
+    <div class="create-room-form">
+      <h3 style="color:#ffeaac;">➕ Criar nova sala</h3>
+      <div class="form-row">
+        <input type="text" id="newRoomName" placeholder="Nome da sala (ex: Turma da Noite)" maxlength="30">
+        <input type="text" id="newPlayerNick" placeholder="Seu nickname" maxlength="20">
+      </div>
+      <div class="form-row">
+        <select id="maxPlayersSelect">
+          <option value="2">2 jogadores (duelo)</option>
+          <option value="4">4 jogadores (turma)</option>
+        </select>
+        <input type="text" id="roomPassword" placeholder="Senha (opcional)">
+        <button id="createRoomBtn">CRIAR SALA</button>
+      </div>
     </div>
-    <div class="input-group" id="joinRoomGroup" style="display:none;">
-      <label>🔑 Código da Sala</label>
-      <input type="text" id="roomCodeInput" placeholder="Ex: ABC123">
-      <button id="confirmJoinBtn">Entrar</button>
+
+    <div class="join-code-form">
+      <h3 style="color:#ffeaac;">🔑 Entrar por código</h3>
+      <div class="form-row">
+        <input type="text" id="joinCodeInput" placeholder="Código da sala (ex: ABC123)">
+        <input type="text" id="joinNickname" placeholder="Seu nickname">
+        <button id="joinByCodeBtn">ENTRAR</button>
+      </div>
     </div>
-    <div id="lobbyStatus" style="margin-top: 20px; color:#ffdfa5;"></div>
+    <div id="lobbyStatus" class="status-msg"></div>
   </div>
 
-  <!-- TELA DO JOGO + CHAT -->
+  <!-- TELA DO JOGO (mesma estrutura) -->
   <div id="gameScreen" class="screen hidden">
     <div class="game-chat-layout">
       <div class="game-area" id="gameArea">
@@ -326,8 +377,9 @@
   let heartbeatInterval = null;
   let gameSubscription = null;
   let chatSubscription = null;
+  let roomListSubscription = null;
 
-  // Engine de regras (puras)
+  // DOMINO RULES (mesmo motor)
   const DominoRules = {
     createDeck() {
       let deck = [];
@@ -410,59 +462,177 @@
     }
   };
 
-  // UI helpers
+  // UI
   function showLobby() {
     document.getElementById('lobbyScreen').classList.remove('hidden');
     document.getElementById('gameScreen').classList.add('hidden');
+    loadRoomList();
   }
   function showGame() {
     document.getElementById('lobbyScreen').classList.add('hidden');
     document.getElementById('gameScreen').classList.remove('hidden');
   }
 
-  // Inicializa Supabase
   async function initSupabase() {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
 
-  // Heartbeat
-  async function updateHeartbeat() {
-    if (!currentPlayerId) return;
-    await supabaseClient.from('players').update({ last_seen: new Date().toISOString() }).eq('id', currentPlayerId);
+  // Carregar lista de salas abertas
+  async function loadRoomList() {
+    const { data, error } = await supabaseClient
+      .from('rooms')
+      .select('id, room_name, max_players, password, players_list, game_state')
+      .in('status', ['open', 'playing']);
+    if (error) {
+      console.error(error);
+      return;
+    }
+    const container = document.getElementById('roomListContainer');
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div style="text-align:center; color:#ffd58c;">Nenhuma sala disponível. Crie uma!</div>';
+      return;
+    }
+    container.innerHTML = '';
+    for (let room of data) {
+      const playersCount = room.players_list ? room.players_list.length : 0;
+      const maxPlayers = room.max_players || 2;
+      const isProtected = room.password && room.password.length > 0;
+      const roomDiv = document.createElement('div');
+      roomDiv.className = 'room-item';
+      roomDiv.innerHTML = `
+        <div class="room-info">
+          <div class="room-name">🏠 ${room.room_name || room.id} (${playersCount}/${maxPlayers})</div>
+          <div class="room-details">Código: ${room.id} ${isProtected ? '🔒 Protegida' : '🔓 Aberta'}</div>
+        </div>
+        <button class="join-room-btn" data-room-id="${room.id}" data-protected="${isProtected}">Entrar</button>
+      `;
+      container.appendChild(roomDiv);
+    }
+    // Adicionar eventos
+    document.querySelectorAll('.join-room-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const roomId = btn.dataset.roomId;
+        const isProtected = btn.dataset.protected === 'true';
+        let password = null;
+        if (isProtected) {
+          password = prompt("Digite a senha da sala:");
+          if (!password) return;
+        }
+        const nick = prompt("Seu nickname:") || "Anonimo";
+        await joinRoomById(roomId, nick, password);
+      });
+    });
   }
 
-  // Distribuição inicial das peças
-  async function tryStartGame(roomId, currentGameState) {
-    if (!currentGameState || currentGameState.status !== 'waiting') return false;
-    const players = currentGameState.players;
-    if (players.length < 2 || players.length > 4) return false;
-    if (currentGameState.hands && Object.keys(currentGameState.hands).length === players.length) return false;
-
-    let deck = DominoRules.createDeck();
-    DominoRules.shuffle(deck);
-    const hands = {};
-    for (let p of players) {
-      hands[p.id] = deck.splice(0, 7);
+  async function joinRoomById(roomId, nickname, password) {
+    // Verificar se sala existe e se a senha está correta
+    const { data: room, error } = await supabaseClient
+      .from('rooms')
+      .select('*')
+      .eq('id', roomId)
+      .single();
+    if (error || !room) {
+      alert("Sala não encontrada");
+      return;
     }
-    const newState = {
-      ...currentGameState,
-      hands: hands,
-      stock: deck,
+    if (room.password && room.password !== password) {
+      alert("Senha incorreta!");
+      return;
+    }
+    const playersList = room.players_list || [];
+    const maxPlayers = room.max_players || 2;
+    if (playersList.length >= maxPlayers) {
+      alert(`Sala cheia (máximo ${maxPlayers} jogadores).`);
+      return;
+    }
+    // Registrar jogador
+    const { data: playerData, error: playerError } = await supabaseClient
+      .from('players')
+      .insert({ nickname, room_id: roomId, last_seen: new Date() })
+      .select()
+      .single();
+    if (playerError) { alert("Erro: " + playerError.message); return; }
+    currentPlayerId = playerData.id;
+    currentRoomId = roomId;
+    currentNick = nickname;
+    // Atualizar sala
+    const newPlayersList = [...playersList, nickname];
+    let gameState = room.game_state;
+    if (!gameState) {
+      gameState = { players: [], hands: {}, stock: [], board: [], leftEnd: null, rightEnd: null, turn: null, status: 'waiting', winner: null, winType: null };
+    }
+    if (!gameState.players) gameState.players = [];
+    gameState.players.push({ id: currentPlayerId, nick: nickname });
+    await supabaseClient
+      .from('rooms')
+      .update({ players_list: newPlayersList, game_state: gameState })
+      .eq('id', roomId);
+    await setupSubscriptionsAndGame(roomId);
+  }
+
+  async function createNewRoom() {
+    const roomName = document.getElementById('newRoomName').value.trim();
+    const nickname = document.getElementById('newPlayerNick').value.trim();
+    const maxPlayers = parseInt(document.getElementById('maxPlayersSelect').value);
+    const password = document.getElementById('roomPassword').value.trim();
+    if (!roomName) { alert("Digite o nome da sala"); return; }
+    if (!nickname) { alert("Digite seu nickname"); return; }
+    // Verificar limite de salas
+    const { count } = await supabaseClient.from('rooms').select('*', { count: 'exact', head: true });
+    if (count >= 10) { alert("Limite de 10 salas atingido"); return; }
+    const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const initialState = {
+      players: [],
+      hands: {},
+      stock: [],
       board: [],
       leftEnd: null,
       rightEnd: null,
-      turn: players[0].id,
-      status: 'playing',
+      turn: null,
+      status: 'waiting',
       winner: null,
       winType: null
     };
-    const { error } = await supabaseClient.from('rooms').update({ game_state: newState }).eq('id', roomId);
-    if (error) console.error("Erro ao iniciar jogo:", error);
-    return !error;
+    const { error: roomError } = await supabaseClient
+      .from('rooms')
+      .insert({
+        id: roomId,
+        room_name: roomName,
+        max_players: maxPlayers,
+        password: password || null,
+        game_state: initialState,
+        players_list: [],
+        status: 'open'
+      });
+    if (roomError) { alert("Erro: " + roomError.message); return; }
+    // Criar jogador e entrar
+    const { data: playerData, error: playerError } = await supabaseClient
+      .from('players')
+      .insert({ nickname, room_id: roomId, last_seen: new Date() })
+      .select()
+      .single();
+    if (playerError) { alert("Erro ao criar jogador"); return; }
+    currentPlayerId = playerData.id;
+    currentRoomId = roomId;
+    currentNick = nickname;
+    initialState.players.push({ id: currentPlayerId, nick: nickname });
+    await supabaseClient
+      .from('rooms')
+      .update({ players_list: [nickname], game_state: initialState })
+      .eq('id', roomId);
+    await setupSubscriptionsAndGame(roomId);
   }
 
-  // Jogar peça
-  async function tryPlayPiece(piece, side) {
+  async function joinByCode() {
+    const code = document.getElementById('joinCodeInput').value.trim().toUpperCase();
+    const nickname = document.getElementById('joinNickname').value.trim();
+    if (!code) { alert("Digite o código da sala"); return; }
+    if (!nickname) { alert("Digite seu nickname"); return; }
+    await joinRoomById(code, nickname, null);
+  }
+
+  // Engine do jogo (as mesmas funções tryPlayPiece, toqueAction, etc)
+  async function tryPlayPiece(piece, side) { /* igual anterior */ 
     if (!currentRoomId || !currentPlayerId) return;
     const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single();
     if (!room || !room.game_state) return;
@@ -495,7 +665,6 @@
       newState.winner = currentPlayerId;
       const special = DominoRules.getSpecialWin(newState.board, piece, newHand);
       newState.winType = special ? special.type : 'normal';
-      newState.winPoints = special ? special.points : 1;
     } else {
       const players = newState.players;
       const currentIdx = players.findIndex(p => p.id === currentPlayerId);
@@ -511,7 +680,6 @@
     await supabaseClient.from('rooms').update({ game_state: newState }).eq('id', currentRoomId);
   }
 
-  // TOQUE
   async function toqueAction() {
     if (!currentRoomId || !currentPlayerId) return;
     const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single();
@@ -521,10 +689,7 @@
     if (state.turn !== currentPlayerId) { alert("Não é sua vez"); return; }
     const hand = state.hands[currentPlayerId];
     const canPlay = hand.some(p => DominoRules.canPlay(p, state.leftEnd, state.rightEnd, state.board.length === 0));
-    if (canPlay) {
-      alert("Você tem jogadas possíveis! Escolha uma peça.");
-      return;
-    }
+    if (canPlay) { alert("Você tem jogadas!"); return; }
     let newState = { ...state };
     if (newState.stock && newState.stock.length > 0) {
       const drawn = newState.stock.pop();
@@ -561,62 +726,47 @@
     await supabaseClient.from('rooms').update({ game_state: newState }).eq('id', currentRoomId);
   }
 
-  // Renderização da UI
   function renderGameUI(state) {
     if (!state) return;
     const boardDiv = document.getElementById('boardChain');
     boardDiv.innerHTML = '';
     if (state.board && state.board.length) {
-      state.board.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'domino-piece';
-        div.innerText = `${p.left}|${p.right}`;
-        boardDiv.appendChild(div);
-      });
-    } else {
-      boardDiv.innerHTML = '<div style="color:#ffdca8;">Nenhuma peça jogada</div>';
-    }
+      state.board.forEach(p => { const div = document.createElement('div'); div.className = 'domino-piece'; div.innerText = `${p.left}|${p.right}`; boardDiv.appendChild(div); });
+    } else boardDiv.innerHTML = '<div style="color:#ffdca8;">Nenhuma peça jogada</div>';
     const myHand = state.hands && state.hands[currentPlayerId] ? state.hands[currentPlayerId] : [];
     const handContainer = document.getElementById('myHand');
     handContainer.innerHTML = '';
-    myHand.forEach((piece) => {
-      const pieceDiv = document.createElement('div');
-      pieceDiv.className = 'domino-piece';
-      pieceDiv.innerText = `${piece.left}|${piece.right}`;
+    myHand.forEach(piece => {
+      const pieceDiv = document.createElement('div'); pieceDiv.className = 'domino-piece'; pieceDiv.innerText = `${piece.left}|${piece.right}`;
       const isValid = DominoRules.canPlay(piece, state.leftEnd, state.rightEnd, state.board.length === 0);
-      if (isValid && state.turn === currentPlayerId && state.status === 'playing') {
-        pieceDiv.classList.add('valid-highlight');
-      }
+      if (isValid && state.turn === currentPlayerId && state.status === 'playing') pieceDiv.classList.add('valid-highlight');
       pieceDiv.onclick = () => {
-        if (state.turn !== currentPlayerId) { alert("Não é sua vez"); return; }
+        if (state.turn !== currentPlayerId) return alert("Não é sua vez");
         if (state.status !== 'playing') return;
-        if (!isValid) { alert("Peça não encaixa"); return; }
+        if (!isValid) return alert("Peça não encaixa");
         const leftMatch = (piece.left === state.leftEnd || piece.right === state.leftEnd);
         const rightMatch = (piece.left === state.rightEnd || piece.right === state.rightEnd);
         if (state.board.length > 0 && leftMatch && rightMatch) {
-          showSideChoiceModal(piece);
-        } else if (state.board.length > 0 && leftMatch) {
-          tryPlayPiece(piece, 'left');
-        } else if (state.board.length > 0 && rightMatch) {
-          tryPlayPiece(piece, 'right');
-        } else {
-          tryPlayPiece(piece, 'right');
-        }
+          const modal = document.createElement('div'); modal.className = 'side-choice-modal';
+          modal.innerHTML = `<p>Escolha lado</p><button id="chLeft">Esquerda</button><button id="chRight">Direita</button><button id="chCancel">Cancelar</button>`;
+          document.body.appendChild(modal);
+          document.getElementById('chLeft').onclick = () => { tryPlayPiece(piece, 'left'); modal.remove(); };
+          document.getElementById('chRight').onclick = () => { tryPlayPiece(piece, 'right'); modal.remove(); };
+          document.getElementById('chCancel').onclick = () => modal.remove();
+        } else if (leftMatch) tryPlayPiece(piece, 'left');
+        else tryPlayPiece(piece, 'right');
       };
       handContainer.appendChild(pieceDiv);
     });
     const playersContainer = document.getElementById('playersContainer');
     playersContainer.innerHTML = '';
-    if (state.players) {
-      state.players.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'player-card';
-        if (state.turn === p.id) card.classList.add('active-turn');
-        let pieceCount = state.hands[p.id] ? state.hands[p.id].length : 0;
-        card.innerText = `${p.nick} (${pieceCount}) ${p.id === currentPlayerId ? '👈' : ''}`;
-        playersContainer.appendChild(card);
-      });
-    }
+    if (state.players) state.players.forEach(p => {
+      const card = document.createElement('div'); card.className = 'player-card';
+      if (state.turn === p.id) card.classList.add('active-turn');
+      let pieceCount = state.hands[p.id] ? state.hands[p.id].length : 0;
+      card.innerText = `${p.nick} (${pieceCount}) ${p.id === currentPlayerId ? '👈' : ''}`;
+      playersContainer.appendChild(card);
+    });
     const statusDiv = document.getElementById('gameStatusMsg');
     if (state.status === 'playing') {
       const currentPlayerNick = state.players.find(p => p.id === state.turn)?.nick || '?';
@@ -629,223 +779,61 @@
       else if (state.winType === 'blocked') winText += ' (Bloqueio - menor soma)';
       statusDiv.innerHTML = winText;
     }
-    const gameAreaDiv = document.getElementById('gameArea');
-    gameAreaDiv.style.transform = rotationAngle === 180 ? 'rotate(180deg)' : 'none';
-  }
-
-  function showSideChoiceModal(piece) {
-    const modal = document.createElement('div');
-    modal.className = 'side-choice-modal';
-    modal.innerHTML = `
-      <p style="color:white;">Escolha o lado para jogar ${piece.left}|${piece.right}</p>
-      <button id="chooseLeft">⬅️ Esquerda</button>
-      <button id="chooseRight">➡️ Direita</button>
-      <button id="cancelChoice">Cancelar</button>
-    `;
-    document.body.appendChild(modal);
-    document.getElementById('chooseLeft').onclick = () => {
-      tryPlayPiece(piece, 'left');
-      modal.remove();
-    };
-    document.getElementById('chooseRight').onclick = () => {
-      tryPlayPiece(piece, 'right');
-      modal.remove();
-    };
-    document.getElementById('cancelChoice').onclick = () => modal.remove();
-  }
-
-  // Chat
-  async function addChatMessage(msg) {
-    const container = document.getElementById('chatMessages');
-    const div = document.createElement('div');
-    div.className = 'chat-message';
-    div.innerHTML = `<strong>${msg.nickname}:</strong> ${msg.content}`;
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
-  }
-  async function sendMessage(text, isReaction = false) {
-    if (!currentRoomId || !currentNick) return;
-    await supabaseClient.from('messages').insert({ room_id: currentRoomId, nickname: currentNick, content: text, type: isReaction ? 'reaction' : 'message' });
-  }
-
-  // Criação de sala com limite de 10
-  async function createNewRoom(nickname) {
-    // Verifica limite de salas ativas
-    const { count, error: countError } = await supabaseClient
-      .from('rooms')
-      .select('*', { count: 'exact', head: true });
-    if (countError) console.error(countError);
-    if (count >= 10) {
-      alert("Limite máximo de 10 salas simultâneas atingido. Tente mais tarde.");
-      return;
-    }
-
-    const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-
-    // Estado inicial vazio
-    const initialState = {
-      players: [],
-      hands: {},
-      stock: [],
-      board: [],
-      leftEnd: null,
-      rightEnd: null,
-      turn: null,
-      status: 'waiting',
-      winner: null,
-      winType: null
-    };
-
-    // Cria a sala
-    const { error: roomError } = await supabaseClient
-      .from('rooms')
-      .insert({
-        id: roomId,
-        game_state: initialState,
-        players_list: [],
-        status: 'open'
-      });
-
-    if (roomError) {
-      alert("Erro ao criar sala: " + roomError.message);
-      return;
-    }
-
-    // Cria o jogador
-    const { data: playerData, error: playerError } = await supabaseClient
-      .from('players')
-      .insert({
-        nickname: nickname,
-        room_id: roomId,
-        last_seen: new Date().toISOString()
-      })
-      .select()
-      .single();
-
-    if (playerError) {
-      alert("Erro ao criar jogador: " + playerError.message);
-      return;
-    }
-
-    currentPlayerId = playerData.id;
-    currentRoomId = roomId;
-    currentNick = nickname;
-
-    // Adiciona o jogador ao estado
-    initialState.players.push({
-      id: currentPlayerId,
-      nick: nickname
-    });
-
-    // Atualiza a sala com o estado inicial e lista de jogadores
-    await supabaseClient
-      .from('rooms')
-      .update({
-        game_state: initialState,
-        players_list: [nickname]
-      })
-      .eq('id', roomId);
-
-    // Inicia subscriptions e renderização
-    await setupSubscriptionsAndGame(roomId);
-  }
-
-  async function enterWithCode(code, nickname) {
-    const { data: room, error } = await supabaseClient.from('rooms').select('*').eq('id', code).single();
-    if (error || !room) {
-      alert("Sala não encontrada. Crie uma nova.");
-      return;
-    }
-    const playersList = room.players_list || [];
-    if (playersList.length >= 4) {
-      alert("Sala cheia (máximo 4 jogadores).");
-      return;
-    }
-    const { data: playerData, error: playerError } = await supabaseClient.from('players').insert({ nickname, room_id: code, last_seen: new Date() }).select().single();
-    if (playerError) { alert("Erro ao entrar: " + playerError.message); return; }
-    currentPlayerId = playerData.id;
-    currentRoomId = code;
-    currentNick = nickname;
-    const newPlayersList = [...playersList, nickname];
-    let gameState = room.game_state;
-    if (!gameState) gameState = { players: [], hands: {}, stock: [], board: [], leftEnd: null, rightEnd: null, turn: null, status: 'waiting' };
-    if (!gameState.players) gameState.players = [];
-    gameState.players.push({ id: currentPlayerId, nick: nickname });
-    await supabaseClient.from('rooms').update({ players_list: newPlayersList, game_state: gameState }).eq('id', code);
-    await setupSubscriptionsAndGame(code);
+    document.getElementById('gameArea').style.transform = rotationAngle === 180 ? 'rotate(180deg)' : 'none';
   }
 
   async function setupSubscriptionsAndGame(roomId) {
     showGame();
     if (heartbeatInterval) clearInterval(heartbeatInterval);
-    heartbeatInterval = setInterval(updateHeartbeat, 20000);
+    heartbeatInterval = setInterval(async () => {
+      if (currentPlayerId) await supabaseClient.from('players').update({ last_seen: new Date() }).eq('id', currentPlayerId);
+    }, 20000);
     if (gameSubscription) await gameSubscription.unsubscribe();
     gameSubscription = supabaseClient.channel(`room-${roomId}`).on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}` }, async (payload) => {
       if (payload.new && payload.new.game_state) {
         let state = payload.new.game_state;
         renderGameUI(state);
         if (state.status === 'waiting' && state.players && state.players.length >= 2) {
-          await tryStartGame(roomId, state);
+          let deck = DominoRules.createDeck(); DominoRules.shuffle(deck);
+          const hands = {};
+          for (let p of state.players) hands[p.id] = deck.splice(0, 7);
+          const newState = { ...state, hands, stock: deck, board: [], leftEnd: null, rightEnd: null, turn: state.players[0].id, status: 'playing' };
+          await supabaseClient.from('rooms').update({ game_state: newState }).eq('id', roomId);
         }
       }
     }).subscribe();
     if (chatSubscription) await chatSubscription.unsubscribe();
     chatSubscription = supabaseClient.channel(`chat-${roomId}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `room_id=eq.${roomId}` }, payload => {
-      addChatMessage(payload.new);
+      const container = document.getElementById('chatMessages');
+      const div = document.createElement('div'); div.className = 'chat-message';
+      div.innerHTML = `<strong>${payload.new.nickname}:</strong> ${payload.new.content}`;
+      container.appendChild(div); container.scrollTop = container.scrollHeight;
     }).subscribe();
     const { data: roomData } = await supabaseClient.from('rooms').select('game_state').eq('id', roomId).single();
-    if (roomData && roomData.game_state) {
-      renderGameUI(roomData.game_state);
-      if (roomData.game_state.status === 'waiting' && roomData.game_state.players && roomData.game_state.players.length >= 2) {
-        await tryStartGame(roomId, roomData.game_state);
-      }
-    }
+    if (roomData?.game_state) renderGameUI(roomData.game_state);
   }
 
-  // Eventos de UI
+  async function sendMessage(text, isReaction = false) {
+    if (!currentRoomId || !currentNick) return;
+    await supabaseClient.from('messages').insert({ room_id: currentRoomId, nickname: currentNick, content: text, type: isReaction ? 'reaction' : 'message' });
+  }
+
   window.onload = async () => {
     await initSupabase();
-    const urlParams = new URLSearchParams(window.location.search);
-    const roomFromUrl = urlParams.get('room');
-    if (roomFromUrl) {
-      const nick = prompt("Digite seu nickname para entrar na sala:") || "Visitante";
-      document.getElementById('nicknameInput').value = nick;
-      await enterWithCode(roomFromUrl, nick);
-    } else {
-      showLobby();
-    }
-    document.getElementById('createRoomBtn').onclick = async () => {
-      const nick = document.getElementById('nicknameInput').value.trim();
-      if (!nick) { alert("Digite um nickname"); return; }
-      await createNewRoom(nick);
-    };
-    document.getElementById('joinRoomBtn').onclick = () => {
-      document.getElementById('joinRoomGroup').style.display = 'block';
-    };
-    document.getElementById('confirmJoinBtn').onclick = async () => {
-      const nick = document.getElementById('nicknameInput').value.trim();
-      const code = document.getElementById('roomCodeInput').value.trim().toUpperCase();
-      if (!nick || !code) return;
-      await enterWithCode(code, nick);
-    };
+    showLobby();
+    document.getElementById('createRoomBtn').onclick = createNewRoom;
+    document.getElementById('joinByCodeBtn').onclick = joinByCode;
     document.getElementById('sendChatBtn').onclick = () => {
       const input = document.getElementById('chatInput');
       if (input.value.trim()) sendMessage(input.value.trim());
       input.value = '';
     };
-    document.querySelectorAll('.reaction-btn').forEach(btn => {
-      btn.onclick = () => sendMessage(`reagiu: ${btn.dataset.reaction}`, true);
-    });
+    document.querySelectorAll('.reaction-btn').forEach(btn => btn.onclick = () => sendMessage(`reagiu: ${btn.dataset.reaction}`, true));
     document.getElementById('toqueBtn').onclick = toqueAction;
     document.getElementById('passarBtn').onclick = passarTurno;
-    document.getElementById('rotateViewBtn').onclick = () => {
-      rotationAngle = rotationAngle === 180 ? 0 : 180;
-      (async () => {
-        const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single();
-        if (room?.game_state) renderGameUI(room.game_state);
-      })();
-    };
-    document.getElementById('leaveRoomBtn').onclick = () => { if (confirm("Sair da sala?")) location.reload(); };
+    document.getElementById('rotateViewBtn').onclick = () => { rotationAngle = rotationAngle === 180 ? 0 : 180; (async () => { const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single(); if (room?.game_state) renderGameUI(room.game_state); })(); };
+    document.getElementById('leaveRoomBtn').onclick = () => { if (confirm("Sair?")) location.reload(); };
+    setInterval(() => { if (document.getElementById('lobbyScreen') && !document.getElementById('lobbyScreen').classList.contains('hidden')) loadRoomList(); }, 5000);
   };
 </script>
 </body>
