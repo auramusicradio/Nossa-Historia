@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Nossa História ✧ Deus te escreveu em mim</title>
-    <!-- Fonts -->
+    <title>Nossa História ✧ Você é meu presente de Deus</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -22,7 +21,6 @@
             scroll-behavior: smooth;
         }
 
-        /* fundo delicado com elementos flutuantes (apenas decor) */
         .bg-ornament {
             position: fixed;
             top: 0;
@@ -55,7 +53,6 @@
             z-index: 2;
         }
 
-        /* todos os cards e blocos terão o efeito reveal */
         .reveal {
             opacity: 0;
             transform: translateY(28px);
@@ -68,7 +65,6 @@
             transform: translateY(0);
         }
 
-        /* cards estilizados */
         .card {
             background: rgba(255, 248, 244, 0.92);
             backdrop-filter: blur(2px);
@@ -79,11 +75,6 @@
             transition: transform 0.25s;
         }
 
-        .card:hover {
-            transform: scale(1.01);
-        }
-
-        /* hero inicial */
         .hero {
             text-align: center;
             background: linear-gradient(125deg, #fff2ec, #ffe2d6);
@@ -119,7 +110,6 @@
             font-style: italic;
         }
 
-        /* timeline itens */
         .timeline-item {
             display: flex;
             gap: 1rem;
@@ -149,7 +139,6 @@
             color: #5e3f34;
         }
 
-        /* versículos grid */
         .versiculo-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -249,7 +238,6 @@
             opacity: 0.7;
         }
 
-        /* responsivo */
         @media (max-width: 550px) {
             .container {
                 padding: 1rem 1rem 5rem 1rem;
@@ -281,7 +269,6 @@
 <div class="bg-ornament" id="floatingBg"></div>
 
 <div class="container">
-    <!-- Hero principal com data -->
     <div class="hero reveal">
         <h1>✧ você, minha oração atendida ✧</h1>
         <div class="date-chip">
@@ -292,7 +279,6 @@
         </div>
     </div>
 
-    <!-- Trajetória juntos -->
     <div class="card reveal">
         <h2 style="font-family: 'Playfair Display'; text-align: center; margin-bottom: 1rem; color:#b7563b;"><i class="fas fa-feather-alt"></i> nossa caminhada</h2>
         <div class="timeline-item">
@@ -325,7 +311,6 @@
         </div>
     </div>
 
-    <!-- Versículos especiais (mulher valorosa + promessas) -->
     <div class="card reveal">
         <h2 style="font-family: 'Playfair Display'; text-align: center;">📖 versículos que te declaram</h2>
         <p style="text-align: center; font-size: 0.9rem; margin-bottom: 1rem; color:#a35138;">vejo Deus em cada detalhe seu</p>
@@ -342,7 +327,6 @@
         </div>
     </div>
 
-    <!-- Declaração principal + família e propósito -->
     <div class="card declaracao reveal">
         <h2>💗 meu querer mais sincero</h2>
         <p><i class="fas fa-quote-left" style="color:#c15e41;"></i> Meu Bem, mesmo nesse momento difícil com seu pai no hospital e você se sentindo frágil, quero que saiba: você é mais forte do que imagina, e eu estou orando por vocês todos os dias. Deus tem cuidado de cada detalhe.</p>
@@ -351,7 +335,6 @@
         <p style="font-family: 'Playfair Display'; font-size: 1.3rem; margin-top: 1rem;">Com todo amor, <br> seu futuro companheiro eterno ♡</p>
     </div>
 
-    <!-- Mensagem de conforto para o momento hospitalar -->
     <div class="card reveal" style="background: #fef1ea; text-align: center;">
         <i class="fas fa-hand-holding-heart" style="font-size: 2.2rem; color:#c2856b;"></i>
         <p style="margin-top: 0.5rem;">✨ “O Senhor é o teu refúgio e a tua fortaleza” (Salmo 91:2). Meu Amor, você não está só. Estou aqui, orando sem cessar pelo seu pai e pela sua saúde. Sei que Deus está no controle. ❤️‍🩹</p>
@@ -364,122 +347,113 @@
     </footer>
 </div>
 
-<!-- Botão flutuante da música (player escondido original, agora um ícone minimalista) -->
 <button id="floatMusicBtn" class="btn-music-float" aria-label="Tocar música ambiente">
     <i class="fas fa-headphones"></i>
 </button>
 <div id="musicTooltip" class="tooltip-music">🎵 ambiente suave</div>
 
 <script>
-    // ---------- SCROLL REVEAL (cards surgem ao passar) ----------
+    // Scroll Reveal
     const revealElements = document.querySelectorAll('.reveal');
-    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                // pode manter ativo, não precisa remover classe
-            }
+            if (entry.isIntersecting) entry.target.classList.add('active');
         });
     }, { threshold: 0.15, rootMargin: "0px 0px -20px 0px" });
-    
     revealElements.forEach(el => observer.observe(el));
-    
-    // Forçar ativação de alguns que já estão visíveis inicialmente (pequeno delay)
     setTimeout(() => {
         revealElements.forEach(el => {
-            const rect = el.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 100) {
-                el.classList.add('active');
-            }
+            if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
         });
     }, 200);
+    window.addEventListener('scroll', () => {
+        revealElements.forEach(el => {
+            if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('active');
+        });
+    });
+
+    // ---------- MÚSICA HOSPEDADA NA RAIZ (arquivo: ambiente.mp3) ----------
+    // ALTERE AQUI O NOME DO SEU ARQUIVO, se não for "ambiente.mp3"
+    const MUSIC_URL = "ambiente.mp3";
     
-    // ---------- MÚSICA FLUTUANTE OCULTA (player escondido, volume baixo) ----------
-    // Caminho da música: pasta "music/Valeu_esperar.mp3" (conforme solicitado)
-    // Altere se necessário: 
-    const MUSIC_PATH = "music/Valeu_esperar.mp3";
     let audio = null;
     let isPlaying = false;
+    let musicLoadFailed = false;
     const musicBtn = document.getElementById('floatMusicBtn');
     const tooltip = document.getElementById('musicTooltip');
-    
+
     function initAudio() {
-        if (!audio) {
-            audio = new Audio(MUSIC_PATH);
+        if (!audio && !musicLoadFailed) {
+            audio = new Audio(MUSIC_URL);
             audio.loop = true;
-            audio.volume = 0.16;   // bem baixinho, só para ambiente
+            audio.volume = 0.16;
             audio.preload = "auto";
             audio.onerror = () => {
-                console.warn("Arquivo de música não encontrado. Verifique se existe a pasta 'music' e o arquivo background-music.mp3");
-                if(musicBtn) {
+                musicLoadFailed = true;
+                audio = null;
+                if (musicBtn) {
                     musicBtn.style.background = "#bda89c";
                     musicBtn.innerHTML = '<i class="fas fa-music-slash"></i>';
-                    if(tooltip) tooltip.innerText = "🎵 música não encontrada";
+                    if (tooltip) tooltip.innerText = "🎵 arquivo não encontrado";
                     setTimeout(() => {
-                        if(tooltip) tooltip.style.opacity = "0.6";
-                    }, 2000);
+                        if (tooltip) tooltip.innerText = "🎵 coloque ambiente.mp3 na raiz";
+                    }, 4000);
                 }
+                console.log("Erro: música não encontrada. Verifique se o arquivo 'ambiente.mp3' está na raiz do repositório.");
             };
         }
         return audio;
     }
-    
+
     function toggleMusic() {
+        if (musicLoadFailed) {
+            if (tooltip) tooltip.innerText = "❌ adicione o arquivo .mp3";
+            setTimeout(() => { if (tooltip) tooltip.innerText = "🎵 ambiente suave"; }, 2500);
+            return;
+        }
         const audioPlayer = initAudio();
         if (!audioPlayer) return;
-        
+
         if (isPlaying) {
             audioPlayer.pause();
             isPlaying = false;
             musicBtn.innerHTML = '<i class="fas fa-headphones"></i>';
             musicBtn.style.background = "#e2b9a8";
-            if(tooltip) tooltip.innerText = "🎵 música pausada";
+            if (tooltip) tooltip.innerText = "🎵 música pausada";
             setTimeout(() => {
-                if(tooltip) tooltip.style.opacity = "0.5";
-                setTimeout(() => {
-                    if(tooltip && tooltip.innerText === "🎵 música pausada") tooltip.innerText = "🎵 ambiente suave";
-                }, 1800);
-            }, 150);
+                if (tooltip && tooltip.innerText === "🎵 música pausada") tooltip.innerText = "🎵 ambiente suave";
+            }, 1800);
         } else {
-            // tentar tocar (usuário interagiu, então autoplay permitido)
             const playPromise = audioPlayer.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     isPlaying = true;
                     musicBtn.innerHTML = '<i class="fas fa-play-circle"></i>';
                     musicBtn.style.background = "#cb9a82";
-                    if(tooltip) tooltip.innerText = "♫ tocando baixinho ♫";
+                    if (tooltip) tooltip.innerText = "♫ tocando baixinho ♫";
                     setTimeout(() => {
-                        if(tooltip && tooltip.innerText === "♫ tocando baixinho ♫") tooltip.innerText = "🎵 ambiente suave";
+                        if (tooltip && tooltip.innerText === "♫ tocando baixinho ♫") tooltip.innerText = "🎵 ambiente suave";
                     }, 2000);
                 }).catch(err => {
-                    console.warn("Não foi possível iniciar música: ", err);
-                    if(tooltip) tooltip.innerText = "⚠️ toque novamente";
-                    setTimeout(() => {
-                        if(tooltip) tooltip.innerText = "🎵 ambiente suave";
-                    }, 1500);
+                    console.warn("Reprodução bloqueada pelo navegador:", err);
+                    if (tooltip) tooltip.innerText = "⚠️ toque novamente";
+                    setTimeout(() => { if (tooltip) tooltip.innerText = "🎵 ambiente suave"; }, 2000);
                 });
             }
         }
     }
-    
+
     if (musicBtn) {
         musicBtn.addEventListener('click', (e) => {
             e.preventDefault();
             toggleMusic();
-            // feedback haptic-like visual
             musicBtn.style.transform = "scale(0.92)";
-            setTimeout(() => { if(musicBtn) musicBtn.style.transform = ""; }, 150);
+            setTimeout(() => { if (musicBtn) musicBtn.style.transform = ""; }, 150);
         });
     }
-    
-    // Pré-carregar áudio sem tocar automaticamente
+
+    // Fundo decorativo
     window.addEventListener('load', () => {
-        const preloadAudio = initAudio();
-        if (preloadAudio) preloadAudio.load();
-        
-        // Criar elementos flutuantes de fundo delicados (somente decor)
         const bgContainer = document.getElementById('floatingBg');
         if (bgContainer) {
             const icons = ['🌸', '🕊️', '✨', '❤️', '🌿', '🌟', '💗'];
@@ -487,8 +461,7 @@
                 const el = document.createElement('div');
                 el.classList.add('float-flower');
                 el.innerHTML = icons[Math.floor(Math.random() * icons.length)];
-                const size = Math.random() * 1.6 + 0.8;
-                el.style.fontSize = size + 'rem';
+                el.style.fontSize = (Math.random() * 1.6 + 0.8) + 'rem';
                 el.style.left = Math.random() * 100 + '%';
                 el.style.animationDuration = Math.random() * 18 + 12 + 's';
                 el.style.animationDelay = Math.random() * 15 + 's';
@@ -496,30 +469,16 @@
                 bgContainer.appendChild(el);
             }
         }
+        // Pequeno pré-carregamento da música (não toca automaticamente)
+        const preload = new Audio();
+        preload.preload = "none";
     });
-    
-    // Esconder tooltip após alguns segundos se o mouse ficar parado? mas não necessário.
-    // efeito de tooltip sutil
-    let tooltipTimeout;
+
     if (musicBtn && tooltip) {
-        musicBtn.addEventListener('mouseenter', () => {
-            if (tooltip) tooltip.style.opacity = "0.9";
-        });
-        musicBtn.addEventListener('mouseleave', () => {
-            if (tooltip) tooltip.style.opacity = "0.5";
-        });
+        musicBtn.addEventListener('mouseenter', () => { tooltip.style.opacity = "0.9"; });
+        musicBtn.addEventListener('mouseleave', () => { tooltip.style.opacity = "0.5"; });
         tooltip.style.opacity = "0.7";
     }
-    
-    // garantir que os cards com reveal que ainda não ativaram por completo devido a imagens ou load, reforce ao scroll
-    window.addEventListener('scroll', () => {
-        revealElements.forEach(el => {
-            const rect = el.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 80) {
-                el.classList.add('active');
-            }
-        });
-    });
 </script>
 </body>
 </html>
