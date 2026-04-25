@@ -53,11 +53,11 @@
             z-index: 2;
         }
 
-        /* Animação aprimorada para aparecer um a um */
+        /* Animação aprimorada para esconder MESMO até rolar */
         .reveal {
             opacity: 0;
-            transform: translateY(35px);
-            transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transform: translateY(60px); /* Aumentei a distância para ficar bem escondido */
+            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
             will-change: transform, opacity;
         }
 
@@ -70,8 +70,8 @@
             text-align: center;
             background: rgba(255, 255, 255, 0.6);
             border-radius: 30px;
-            padding: 0.6rem 1rem;
-            font-size: 0.85rem;
+            padding: 0.8rem 1.2rem;
+            font-size: 0.9rem;
             color: #b34e38;
             margin-bottom: 1.5rem;
             border: 1px dashed #e2b9a8;
@@ -79,6 +79,7 @@
             margin-left: auto;
             margin-right: auto;
             width: 100%;
+            font-weight: 500;
         }
 
         .card {
@@ -95,8 +96,14 @@
             background: linear-gradient(125deg, #fff2ec, #ffe2d6);
             border-radius: 56px;
             padding: 2.5rem 1.2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem; /* Espaço extra para não mostrar o próximo card */
             border: 1px solid #ffd5c2;
+            animation: fadeIn 1s ease-out forwards; /* Animação simples de entrada inicial */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .hero h1 {
@@ -314,11 +321,11 @@
 
 <div class="container">
     
-    <div class="music-notice reveal">
-        <i class="fas fa-play-circle"></i> Dê play no botão flutuante para ouvir uma canção especial enquanto lê.
+    <div class="music-notice" style="animation: fadeIn 0.8s ease-out;">
+        <i class="fas fa-play-circle" style="color: #c2785e; margin-right: 5px;"></i> preparei uma canção para você, espero que goste, da um play aí ❤️
     </div>
 
-    <div class="hero reveal">
+    <div class="hero">
         <h1>✧ você, minha oração atendida ✧</h1>
         <div class="date-chip">
             <i class="fas fa-calendar-alt"></i> 15 de janeiro de 2026
@@ -468,21 +475,22 @@
     // Configuração do Scroll Reveal aprimorado (efeito cascata)
     const revealElements = document.querySelectorAll('.reveal');
     
+    // Ajustei o rootMargin: só vai revelar quando o elemento subir 15% da tela,
+    // garantindo que ele não carregue enquanto estiver só "espiando" embaixo.
     const observerOptions = {
         threshold: 0.1, 
-        rootMargin: "0px 0px -50px 0px"
+        rootMargin: "0px 0px -15% 0px"
     };
 
     const observer = new IntersectionObserver((entries) => {
-        // Criando um atraso (delay) caso vários elementos apareçam na tela juntos
         let delay = 0;
         entries.forEach(entry => {
             if (entry.isIntersecting && !entry.target.classList.contains('active')) {
                 setTimeout(() => {
                     entry.target.classList.add('active');
                 }, delay);
-                delay += 150; // Atraso de 150ms entre cada item
-                observer.unobserve(entry.target); // Para animar apenas uma vez
+                delay += 150; 
+                observer.unobserve(entry.target); 
             }
         });
     }, observerOptions);
@@ -502,7 +510,7 @@
         if (!audio && !musicLoadFailed) {
             audio = new Audio(MUSIC_URL);
             audio.loop = true;
-            audio.volume = 0.2; // Volume um pouquinho maior para a letra
+            audio.volume = 0.2; 
             audio.preload = "auto";
             audio.onerror = () => {
                 musicLoadFailed = true;
@@ -565,7 +573,6 @@
             setTimeout(() => { if (musicBtn) musicBtn.style.transform = ""; }, 150);
         });
         
-        // Tooltip hover
         musicBtn.addEventListener('mouseenter', () => { 
             tooltip.style.opacity = "1"; 
             if(isPlaying) tooltip.innerText = "Pausar música";
