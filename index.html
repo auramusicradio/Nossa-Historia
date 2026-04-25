@@ -53,16 +53,32 @@
             z-index: 2;
         }
 
+        /* Animação aprimorada para aparecer um a um */
         .reveal {
             opacity: 0;
-            transform: translateY(28px);
-            transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s ease;
+            transform: translateY(35px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             will-change: transform, opacity;
         }
 
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        .music-notice {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 30px;
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+            color: #b34e38;
+            margin-bottom: 1.5rem;
+            border: 1px dashed #e2b9a8;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
         }
 
         .card {
@@ -72,14 +88,13 @@
             padding: 1.8rem 1.5rem;
             margin-bottom: 2rem;
             box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(253, 207, 186, 0.6);
-            transition: transform 0.25s;
         }
 
         .hero {
             text-align: center;
             background: linear-gradient(125deg, #fff2ec, #ffe2d6);
             border-radius: 56px;
-            padding: 2rem 1.2rem;
+            padding: 2.5rem 1.2rem;
             margin-bottom: 2rem;
             border: 1px solid #ffd5c2;
         }
@@ -95,17 +110,17 @@
         .hero .date-chip {
             background: #f3d9ce;
             display: inline-block;
-            padding: 0.3rem 1.2rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 60px;
             font-size: 0.9rem;
             font-weight: 500;
             color: #8f3e2c;
-            margin-top: 0.8rem;
+            margin-top: 1rem;
         }
 
         .subtitle {
             font-size: 1rem;
-            margin-top: 0.8rem;
+            margin-top: 1rem;
             color: #bc6a52;
             font-style: italic;
         }
@@ -116,9 +131,10 @@
             align-items: flex-start;
             margin-bottom: 1.2rem;
             background: #fffaf6;
-            padding: 0.9rem 1.2rem;
-            border-radius: 50px;
+            padding: 1.2rem;
+            border-radius: 30px;
             border-left: 6px solid #e6a088;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
 
         .timeline-icon {
@@ -132,46 +148,49 @@
             font-size: 1.2rem;
             font-weight: 700;
             color: #aa4f38;
+            margin-bottom: 0.3rem;
         }
 
         .timeline-text p {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #5e3f34;
+            line-height: 1.5;
         }
 
         .versiculo-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
         }
 
         .verse-card {
             background: #fff5ef;
             border-radius: 28px;
-            padding: 1rem;
+            padding: 1.2rem;
             text-align: center;
-            transition: all 0.2s;
             border: 1px solid #ffded0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
 
         .verse-card i {
             font-size: 1.7rem;
             color: #da8568;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
         }
 
         .verse-card p {
             font-family: 'Playfair Display', serif;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             margin: 0.5rem 0;
-            line-height: 1.35;
+            line-height: 1.4;
         }
 
         .verse-card small {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #b47b66;
+            font-weight: 600;
         }
 
         .declaracao {
@@ -182,8 +201,35 @@
 
         .declaracao h2 {
             font-family: 'Playfair Display';
-            font-size: 1.9rem;
+            font-size: 2rem;
             color: #bd5b40;
+            margin-bottom: 1.5rem;
+        }
+        
+        .declaracao p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .letra-musica {
+            background: transparent;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .letra-musica h2 {
+            font-family: 'Playfair Display';
+            font-size: 1.8rem;
+            color: #b7563b;
+            margin-bottom: 2rem;
+        }
+
+        .estrofe {
+            margin-bottom: 1.8rem;
+            font-style: italic;
+            color: #634338;
+            line-height: 1.8;
+            font-size: 0.95rem;
         }
 
         .btn-music-float {
@@ -193,7 +239,6 @@
             width: 54px;
             height: 54px;
             border-radius: 50%;
-            background: #e2b9a8;
             border: none;
             cursor: pointer;
             box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
@@ -226,21 +271,22 @@
             pointer-events: none;
             z-index: 1000;
             white-space: nowrap;
-            opacity: 0.7;
+            opacity: 0;
             transition: opacity 0.3s;
         }
 
         footer {
             text-align: center;
-            margin-top: 2rem;
-            font-size: 0.7rem;
+            margin-top: 3rem;
+            font-size: 0.75rem;
             color: #b4846e;
-            opacity: 0.7;
+            opacity: 0.8;
+            padding-bottom: 2rem;
         }
 
         @media (max-width: 550px) {
             .container {
-                padding: 1rem 1rem 5rem 1rem;
+                padding: 1rem 1rem 6rem 1rem;
             }
             .hero h1 {
                 font-size: 1.8rem;
@@ -250,13 +296,11 @@
                 text-align: center;
                 border-left: none;
                 border-top: 4px solid #e6a088;
-            }
-            .timeline-icon {
-                margin: 0 auto;
+                padding-top: 1.5rem;
             }
             .btn-music-float {
-                width: 48px;
-                height: 48px;
+                width: 50px;
+                height: 50px;
                 font-size: 1.5rem;
                 bottom: 20px;
                 right: 16px;
@@ -269,6 +313,11 @@
 <div class="bg-ornament" id="floatingBg"></div>
 
 <div class="container">
+    
+    <div class="music-notice reveal">
+        <i class="fas fa-play-circle"></i> Dê play no botão flutuante para ouvir uma canção especial enquanto lê.
+    </div>
+
     <div class="hero reveal">
         <h1>✧ você, minha oração atendida ✧</h1>
         <div class="date-chip">
@@ -279,30 +328,33 @@
         </div>
     </div>
 
-    <div class="card reveal">
-        <h2 style="font-family: 'Playfair Display'; text-align: center; margin-bottom: 1rem; color:#b7563b;"><i class="fas fa-feather-alt"></i> nossa caminhada</h2>
-        <div class="timeline-item">
+    <div class="card" style="background: transparent; box-shadow: none; padding: 0;">
+        <h2 class="reveal" style="font-family: 'Playfair Display'; text-align: center; margin-bottom: 1.5rem; color:#b7563b;">
+            <i class="fas fa-feather-alt"></i> nossa caminhada
+        </h2>
+        
+        <div class="timeline-item reveal">
             <div class="timeline-icon"><i class="fab fa-whatsapp"></i></div>
             <div class="timeline-text">
                 <h3>💬 15 de janeiro · primeiro "oi"</h3>
                 <p>Duas almas que nem sabiam que Deus já estava escrevendo algo eterno. Do simples nasceu o mais lindo.</p>
             </div>
         </div>
-        <div class="timeline-item">
+        <div class="timeline-item reveal">
             <div class="timeline-icon"><i class="fas fa-pray"></i></div>
             <div class="timeline-text">
                 <h3>🙏 orando um pelo outro</h3>
                 <p>Antes de qualquer abraço, já intercedíamos. Sua fé me fortaleceu. Você me ensinou que o Amor verdadeiro nasce no trono da graça.</p>
             </div>
         </div>
-        <div class="timeline-item">
+        <div class="timeline-item reveal">
             <div class="timeline-icon"><i class="fas fa-heartbeat"></i></div>
             <div class="timeline-text">
                 <h3>🌸 se apaixonando a cada dia</h3>
                 <p>Cada conversa, cada detalhe. Eu me apaixono por quem você é, por sua doçura e coragem. Você me completa.</p>
             </div>
         </div>
-        <div class="timeline-item">
+        <div class="timeline-item reveal">
             <div class="timeline-icon"><i class="fas fa-church"></i></div>
             <div class="timeline-text">
                 <h3>✝️ um futuro com Deus no centro</h3>
@@ -311,39 +363,99 @@
         </div>
     </div>
 
-    <div class="card reveal">
-        <h2 style="font-family: 'Playfair Display'; text-align: center;">📖 versículos que te declaram</h2>
-        <p style="text-align: center; font-size: 0.9rem; margin-bottom: 1rem; color:#a35138;">vejo Deus em cada detalhe seu</p>
+    <div class="card" style="background: transparent; box-shadow: none; padding: 0;">
+        <h2 class="reveal" style="font-family: 'Playfair Display'; text-align: center; color:#b7563b;">📖 versículos que te declaram</h2>
+        <p class="reveal" style="text-align: center; font-size: 0.9rem; margin-bottom: 1.5rem; color:#a35138;">vejo Deus em cada detalhe seu</p>
+        
         <div class="versiculo-grid">
-            <div class="verse-card"><i class="fas fa-gem"></i><p>“Mulher virtuosa, quem a achará? O seu valor excede ao de rubis.”</p><small>Provérbios 31:10</small></div>
-            <div class="verse-card"><i class="fas fa-dove"></i><p>“Tu és toda formosa, amada minha, e não há mancha em ti.”</p><small>Cantares 4:7</small></div>
-            <div class="verse-card"><i class="fas fa-seedling"></i><p>“Porque eu bem sei os pensamentos que tenho a teu respeito: paz, e não mal.”</p><small>Jeremias 29:11</small></div>
-            <div class="verse-card"><i class="fas fa-hands-helping"></i><p>“O amor é paciente, é benigno. Tudo sofre, tudo crê, tudo espera.”</p><small>1 Coríntios 13:4,7</small></div>
-            <div class="verse-card"><i class="fas fa-crown"></i><p>“A sua família chama-a bem-aventurada. A mulher que teme ao Senhor, essa será louvada.”</p><small>Provérbios 31:28,30</small></div>
-            <div class="verse-card"><i class="fas fa-star-of-life"></i><p>“Ora, o Deus de esperança vos encha de todo o gozo e paz.”</p><small>Romanos 15:13</small></div>
+            <div class="verse-card reveal"><i class="fas fa-gem"></i><p>“Mulher virtuosa, quem a achará? O seu valor excede ao de rubis.”</p><small>Provérbios 31:10</small></div>
+            <div class="verse-card reveal"><i class="fas fa-dove"></i><p>“Tu és toda formosa, amada minha, e não há mancha em ti.”</p><small>Cantares 4:7</small></div>
+            <div class="verse-card reveal"><i class="fas fa-seedling"></i><p>“Porque eu bem sei os pensamentos que tenho a teu respeito: paz, e não mal.”</p><small>Jeremias 29:11</small></div>
+            <div class="verse-card reveal"><i class="fas fa-hands-helping"></i><p>“O amor é paciente, é benigno. Tudo sofre, tudo crê, tudo espera.”</p><small>1 Coríntios 13:4,7</small></div>
+            <div class="verse-card reveal"><i class="fas fa-crown"></i><p>“A sua família chama-a bem-aventurada. A mulher que teme ao Senhor, essa será louvada.”</p><small>Provérbios 31:28,30</small></div>
+            <div class="verse-card reveal"><i class="fas fa-star-of-life"></i><p>“Ora, o Deus de esperança vos encha de todo o gozo e paz.”</p><small>Romanos 15:13</small></div>
         </div>
-        <div style="background:#f9e9e1; border-radius: 32px; padding: 0.8rem; text-align: center; margin-top: 1rem;">
-            <i class="fas fa-ring"></i> <strong>Mateus 19:6</strong> — “Portanto, o que Deus ajuntou, não o separe o homem.”
+        
+        <div class="reveal" style="background:#f9e9e1; border-radius: 32px; padding: 1rem; text-align: center; margin-top: 1.5rem; border: 1px solid #ffd5c2;">
+            <i class="fas fa-ring" style="color: #c2785e;"></i> <strong>Mateus 19:6</strong> — “Portanto, o que Deus ajuntou, não o separe o homem.”
         </div>
     </div>
 
     <div class="card declaracao reveal">
         <h2>💗 meu querer mais sincero</h2>
-        <p><i class="fas fa-quote-left" style="color:#c15e41;"></i> Meu Bem, mesmo nesse momento difícil com seu pai no hospital e você se sentindo frágil, quero que saiba: você é mais forte do que imagina, e eu estou orando por vocês todos os dias. Deus tem cuidado de cada detalhe.</p>
-        <p>Você é a <strong>mulher valorosa</strong> que eu escolhi amar. Quero ser o homem da sua vida, te proteger, te abraçar e construir uma família onde Jesus seja o alicerce. <br> Quero viver ao seu lado cada estação, e juntos seguirmos em direção ao coração de Deus.</p>
-        <p style="font-weight: 500;">Eu te vejo como presente dEle. E eu prometo buscar a Deus com você, honrar teu pai e cuidar de você com toda ternura.</p>
-        <p style="font-family: 'Playfair Display'; font-size: 1.3rem; margin-top: 1rem;">Com todo amor, <br> seu futuro companheiro eterno ♡</p>
+        <p class="reveal"><i class="fas fa-quote-left" style="color:#c15e41;"></i> Meu Bem, mesmo nesse momento difícil com seu pai no hospital e você se sentindo frágil, quero que saiba: você é mais forte do que imagina, e eu estou orando por vocês todos os dias. Deus tem cuidado de cada detalhe.</p>
+        <p class="reveal">Você é a <strong>mulher valorosa</strong> que eu escolhi amar. Quero ser o homem da sua vida, te proteger, te abraçar e construir uma família onde Jesus seja o alicerce. <br> Quero viver ao seu lado cada estação, e juntos seguirmos em direção ao coração de Deus.</p>
+        <p class="reveal" style="font-weight: 500;">Eu te vejo como presente dEle. E eu prometo buscar a Deus com você, honrar teu pai e cuidar de você com toda ternura.</p>
+        <p class="reveal" style="font-family: 'Playfair Display'; font-size: 1.3rem; margin-top: 1.5rem; color:#b7563b;">Com todo amor, <br> seu futuro companheiro eterno ♡</p>
     </div>
 
     <div class="card reveal" style="background: #fef1ea; text-align: center;">
         <i class="fas fa-hand-holding-heart" style="font-size: 2.2rem; color:#c2856b;"></i>
-        <p style="margin-top: 0.5rem;">✨ “O Senhor é o teu refúgio e a tua fortaleza” (Salmo 91:2). Meu Amor, você não está só. Estou aqui, orando sem cessar pelo seu pai e pela sua saúde. Sei que Deus está no controle. ❤️‍🩹</p>
-        <p><i class="fas fa-praying-hands"></i> descansa no amor dEle e no meu carinho por você.</p>
+        <p style="margin-top: 0.8rem; line-height: 1.6;">✨ “O Senhor é o teu refúgio e a tua fortaleza” (Salmo 91:2). Meu Amor, você não está só. Estou aqui, orando sem cessar pelo seu pai e pela sua saúde. Sei que Deus está no controle. ❤️‍🩹</p>
+        <p style="margin-top: 0.8rem; font-weight: 500;"><i class="fas fa-praying-hands"></i> descansa no amor dEle e no meu carinho por você.</p>
     </div>
 
-    <footer>
+    <div class="letra-musica">
+        <h2 class="reveal"><i class="fas fa-music" style="font-size: 1.2rem; margin-right: 8px;"></i> Era Você</h2>
+        
+        <p class="estrofe reveal">
+            Eu escrevi tantas orações sem saber o teu nome,<br>
+            pedi a Deus alguém que fosse mais que um sonho…<br>
+            Guardei meu coração, aprendi a confiar,<br>
+            e hoje olhando pra você… eu sei, valeu esperar…
+        </p>
+
+        <p class="estrofe reveal">
+            Cada noite em silêncio, Deus já sabia de nós dois,<br>
+            o que era só oração… hoje vive entre nós…
+        </p>
+
+        <p class="estrofe reveal" style="font-weight: 500; font-size: 1.05rem;">
+            Era você… em cada oração que eu fiz,<br>
+            era você… que Deus já guardava pra mim,<br>
+            sem medo, sem confusão,<br>
+            o amor que veio do céu<br>
+            hoje acalma o meu coração…
+        </p>
+
+        <p class="estrofe reveal">
+            Você é tudo aquilo que eu pedi sem perceber,<br>
+            a resposta mais bonita que eu já pude receber…<br>
+            E quando a gente ora junto, eu entendo o porquê,<br>
+            Deus escreveu nossa história antes da gente se ver…
+        </p>
+
+        <p class="estrofe reveal">
+            Cada detalhe, cada espera, cada “não” que Ele deu,<br>
+            era só Deus preparando eu pra viver você…
+        </p>
+
+        <p class="estrofe reveal" style="font-weight: 500; font-size: 1.05rem;">
+            Era você… em cada oração que eu fiz,<br>
+            era você… que Deus já guardava pra mim,<br>
+            sem medo, sem confusão,<br>
+            o amor que veio do céu<br>
+            hoje acalma o meu coração…
+        </p>
+
+        <p class="estrofe reveal">
+            Se um dia você chorou sem saber quem eu seria,<br>
+            eu também pedi a Deus por você todos os dias…<br>
+            E hoje eu vejo o cuidado em cada direção,<br>
+            duas respostas vivas da mesma oração…
+        </p>
+
+        <p class="estrofe reveal" style="font-family: 'Playfair Display'; font-size: 1.2rem;">
+            Eu escolhi esperar…<br>
+            E Deus me fez te encontrar…<br>
+            A promessa vive em nós…<br>
+            Era você…
+        </p>
+    </div>
+
+    <footer class="reveal">
         <p style="letter-spacing: 1px;">feito com oração e gratidão • nossa história é um louvor</p>
-        <i class="fas fa-infinity"></i> <i class="fas fa-church"></i>
+        <p style="margin-top: 8px;"><i class="fas fa-infinity"></i> <i class="fas fa-church"></i></p>
     </footer>
 </div>
 
@@ -353,29 +465,33 @@
 <div id="musicTooltip" class="tooltip-music">🎵 ambiente suave</div>
 
 <script>
-    // Scroll Reveal
+    // Configuração do Scroll Reveal aprimorado (efeito cascata)
     const revealElements = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('active');
-        });
-    }, { threshold: 0.15, rootMargin: "0px 0px -20px 0px" });
-    revealElements.forEach(el => observer.observe(el));
-    setTimeout(() => {
-        revealElements.forEach(el => {
-            if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
-        });
-    }, 200);
-    window.addEventListener('scroll', () => {
-        revealElements.forEach(el => {
-            if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('active');
-        });
-    });
-
-    // ---------- MÚSICA HOSPEDADA NA RAIZ (arquivo: ambiente.mp3) ----------
-    // ALTERE AQUI O NOME DO SEU ARQUIVO, se não for "ambiente.mp3"
-    const MUSIC_URL = "ambiente.mp3";
     
+    const observerOptions = {
+        threshold: 0.1, 
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        // Criando um atraso (delay) caso vários elementos apareçam na tela juntos
+        let delay = 0;
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.classList.contains('active')) {
+                setTimeout(() => {
+                    entry.target.classList.add('active');
+                }, delay);
+                delay += 150; // Atraso de 150ms entre cada item
+                observer.unobserve(entry.target); // Para animar apenas uma vez
+            }
+        });
+    }, observerOptions);
+
+    revealElements.forEach(el => observer.observe(el));
+
+    // ---------- MÚSICA HOSPEDADA NA RAIZ ----------
+    const MUSIC_URL = "ambiente.mp3"; 
+
     let audio = null;
     let isPlaying = false;
     let musicLoadFailed = false;
@@ -386,7 +502,7 @@
         if (!audio && !musicLoadFailed) {
             audio = new Audio(MUSIC_URL);
             audio.loop = true;
-            audio.volume = 0.16;
+            audio.volume = 0.2; // Volume um pouquinho maior para a letra
             audio.preload = "auto";
             audio.onerror = () => {
                 musicLoadFailed = true;
@@ -394,21 +510,26 @@
                 if (musicBtn) {
                     musicBtn.style.background = "#bda89c";
                     musicBtn.innerHTML = '<i class="fas fa-music-slash"></i>';
-                    if (tooltip) tooltip.innerText = "🎵 arquivo não encontrado";
-                    setTimeout(() => {
-                        if (tooltip) tooltip.innerText = "🎵 coloque ambiente.mp3 na raiz";
-                    }, 4000);
+                    showTooltip("🎵 arquivo não encontrado");
                 }
-                console.log("Erro: música não encontrada. Verifique se o arquivo 'ambiente.mp3' está na raiz do repositório.");
             };
         }
         return audio;
     }
 
+    function showTooltip(text, duration = 2000) {
+        if (tooltip) {
+            tooltip.innerText = text;
+            tooltip.style.opacity = "1";
+            setTimeout(() => {
+                tooltip.style.opacity = "0";
+            }, duration);
+        }
+    }
+
     function toggleMusic() {
         if (musicLoadFailed) {
-            if (tooltip) tooltip.innerText = "❌ adicione o arquivo .mp3";
-            setTimeout(() => { if (tooltip) tooltip.innerText = "🎵 ambiente suave"; }, 2500);
+            showTooltip("❌ adicione o arquivo .mp3");
             return;
         }
         const audioPlayer = initAudio();
@@ -419,25 +540,18 @@
             isPlaying = false;
             musicBtn.innerHTML = '<i class="fas fa-headphones"></i>';
             musicBtn.style.background = "#e2b9a8";
-            if (tooltip) tooltip.innerText = "🎵 música pausada";
-            setTimeout(() => {
-                if (tooltip && tooltip.innerText === "🎵 música pausada") tooltip.innerText = "🎵 ambiente suave";
-            }, 1800);
+            showTooltip("🎵 música pausada");
         } else {
             const playPromise = audioPlayer.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     isPlaying = true;
-                    musicBtn.innerHTML = '<i class="fas fa-play-circle"></i>';
+                    musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
                     musicBtn.style.background = "#cb9a82";
-                    if (tooltip) tooltip.innerText = "♫ tocando baixinho ♫";
-                    setTimeout(() => {
-                        if (tooltip && tooltip.innerText === "♫ tocando baixinho ♫") tooltip.innerText = "🎵 ambiente suave";
-                    }, 2000);
+                    showTooltip("♫ Era Você ♫");
                 }).catch(err => {
-                    console.warn("Reprodução bloqueada pelo navegador:", err);
-                    if (tooltip) tooltip.innerText = "⚠️ toque novamente";
-                    setTimeout(() => { if (tooltip) tooltip.innerText = "🎵 ambiente suave"; }, 2000);
+                    console.warn("Reprodução bloqueada:", err);
+                    showTooltip("⚠️ toque novamente para tocar");
                 });
             }
         }
@@ -450,6 +564,14 @@
             musicBtn.style.transform = "scale(0.92)";
             setTimeout(() => { if (musicBtn) musicBtn.style.transform = ""; }, 150);
         });
+        
+        // Tooltip hover
+        musicBtn.addEventListener('mouseenter', () => { 
+            tooltip.style.opacity = "1"; 
+            if(isPlaying) tooltip.innerText = "Pausar música";
+            else tooltip.innerText = "Tocar música";
+        });
+        musicBtn.addEventListener('mouseleave', () => { tooltip.style.opacity = "0"; });
     }
 
     // Fundo decorativo
@@ -469,16 +591,7 @@
                 bgContainer.appendChild(el);
             }
         }
-        // Pequeno pré-carregamento da música (não toca automaticamente)
-        const preload = new Audio();
-        preload.preload = "none";
     });
-
-    if (musicBtn && tooltip) {
-        musicBtn.addEventListener('mouseenter', () => { tooltip.style.opacity = "0.9"; });
-        musicBtn.addEventListener('mouseleave', () => { tooltip.style.opacity = "0.5"; });
-        tooltip.style.opacity = "0.7";
-    }
 </script>
 </body>
 </html>
