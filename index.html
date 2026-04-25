@@ -1,881 +1,525 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Domínio Online - Pontuação + Bot Automático</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Nossa História ✧ Deus te escreveu em mim</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: linear-gradient(145deg, #1a4d2a 0%, #0c2a1a 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
+        body {
+            background: linear-gradient(145deg, #fef7f2 0%, #ffe6de 100%);
+            font-family: 'Poppins', sans-serif;
+            color: #392d2a;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
 
-    .screen {
-      width: 100%;
-      max-width: 1400px;
-    }
-    .hidden { display: none; }
+        /* fundo delicado com elementos flutuantes (apenas decor) */
+        .bg-ornament {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
 
-    /* LOBBY */
-    .lobby-container {
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(12px);
-      border-radius: 48px;
-      padding: 32px 24px;
-      max-width: 800px;
-      margin: 0 auto;
-      border: 1px solid #ffd966aa;
-    }
-    .lobby-container h1 {
-      font-size: 2rem;
-      color: #ffdf8c;
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    .room-list {
-      background: #00000050;
-      border-radius: 32px;
-      padding: 16px;
-      margin: 20px 0;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-    .room-item {
-      background: #2c2a1eaa;
-      border-radius: 24px;
-      padding: 12px 16px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      border: 1px solid #c9a458;
-    }
-    .room-info {
-      flex: 2;
-    }
-    .room-name {
-      font-weight: bold;
-      color: #ffeaac;
-      font-size: 1.1rem;
-    }
-    .room-details {
-      font-size: 0.8rem;
-      color: #d4c28a;
-    }
-    .join-room-btn {
-      background: #4a7c59;
-      padding: 6px 16px;
-      font-size: 0.9rem;
-      margin: 0;
-      box-shadow: 0 2px 0 #2a4a35;
-    }
-    .create-room-form, .join-code-form {
-      background: #00000060;
-      border-radius: 28px;
-      padding: 20px;
-      margin-top: 20px;
-    }
-    .form-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-    .form-row input, .form-row select {
-      flex: 1;
-      padding: 10px;
-      border-radius: 40px;
-      border: none;
-      background: #fff7e8;
-      font-size: 0.95rem;
-    }
-    button {
-      background: #f5b042;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 60px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 4px;
-      box-shadow: 0 3px 0 #9b5818;
-      transition: 0.05s linear;
-    }
-    button:active {
-      transform: translateY(2px);
-      box-shadow: 0 1px 0 #9b5818;
-    }
-    .status-msg {
-      color: #ffdfaa;
-      text-align: center;
-      margin-top: 12px;
-    }
+        .float-flower {
+            position: absolute;
+            font-size: 1.2rem;
+            color: rgba(221, 150, 125, 0.12);
+            animation: floatAround 22s infinite linear;
+            user-select: none;
+        }
 
-    /* GAME + CHAT */
-    .game-chat-layout {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .game-area {
-      flex: 3;
-      min-width: 280px;
-      background: #0e2f1cd9;
-      border-radius: 40px;
-      padding: 20px;
-      backdrop-filter: blur(4px);
-      border: 1px solid #e6c280;
-      transition: transform 0.3s;
-    }
-    .chat-area {
-      flex: 1.2;
-      min-width: 260px;
-      background: #1a2a1ad9;
-      border-radius: 40px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      backdrop-filter: blur(4px);
-      border: 1px solid #bfa15b;
-    }
-    .scoreboard {
-      background: #00000070;
-      border-radius: 28px;
-      padding: 12px;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .score-item {
-      text-align: center;
-      font-weight: bold;
-      color: #ffefbf;
-      background: #2a2a1e80;
-      padding: 6px 16px;
-      border-radius: 40px;
-    }
-    .players-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .player-card {
-      background: #00000060;
-      border-radius: 32px;
-      padding: 8px 16px;
-      text-align: center;
-      flex: 1;
-      color: #f7eec5;
-      font-weight: bold;
-    }
-    .player-card.active-turn {
-      background: #c98f2eaa;
-      box-shadow: 0 0 0 2px gold;
-    }
-    .board {
-      background: #1c3a2bd9;
-      border-radius: 48px;
-      padding: 20px;
-      margin: 15px 0;
-      min-height: 130px;
-    }
-    .domino-chain {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      align-items: center;
-    }
-    .domino-piece {
-      background: #fef5e2;
-      width: 70px;
-      height: 100px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      font-size: 1.7rem;
-      box-shadow: 0 6px 12px black;
-      border: 1px solid #b97f44;
-      transition: 0.1s;
-    }
-    .domino-hand {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin: 20px 0;
-    }
-    .domino-hand .domino-piece {
-      cursor: pointer;
-      transition: transform 0.1s;
-    }
-    .domino-hand .domino-piece:hover {
-      transform: translateY(-8px);
-      background: #fff2dd;
-    }
-    .valid-highlight {
-      box-shadow: 0 0 0 3px #ffcc44, 0 0 0 6px #ffa600;
-    }
-    .action-bar {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin: 16px 0;
-      flex-wrap: wrap;
-    }
-    .chat-messages {
-      flex: 1;
-      background: #0f1f0faa;
-      border-radius: 28px;
-      padding: 12px;
-      height: 350px;
-      overflow-y: auto;
-      margin-bottom: 12px;
-    }
-    .chat-message {
-      padding: 5px 8px;
-      border-bottom: 1px solid #b9a45860;
-      font-size: 0.85rem;
-      color: #f0e2b6;
-    }
-    .chat-input-area {
-      display: flex;
-      gap: 8px;
-    }
-    .chat-input-area input {
-      flex: 1;
-      border-radius: 40px;
-      border: none;
-      padding: 10px 15px;
-    }
-    .reactions {
-      display: flex;
-      gap: 10px;
-      margin-top: 8px;
-      justify-content: center;
-    }
-    .reaction-btn {
-      background: #332d1e;
-      font-size: 1.3rem;
-      padding: 6px 12px;
-      box-shadow: none;
-      margin: 0;
-    }
-    @media (max-width: 800px) {
-      .domino-piece { width: 55px; height: 80px; font-size: 1.2rem; }
-      .player-card { font-size: 0.8rem; }
-    }
-    .status-text {
-      background: #00000070;
-      border-radius: 32px;
-      padding: 8px;
-      text-align: center;
-      font-weight: bold;
-      color: #ffdd99;
-      margin-top: 12px;
-    }
-    .side-choice-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #2c2b26e6;
-      backdrop-filter: blur(16px);
-      padding: 20px;
-      border-radius: 32px;
-      z-index: 1000;
-      text-align: center;
-      border: 2px solid gold;
-    }
-  </style>
+        @keyframes floatAround {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.4; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 1.8rem 1.2rem 5rem 1.2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* todos os cards e blocos terão o efeito reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s ease;
+            will-change: transform, opacity;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* cards estilizados */
+        .card {
+            background: rgba(255, 248, 244, 0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 40px;
+            padding: 1.8rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(253, 207, 186, 0.6);
+            transition: transform 0.25s;
+        }
+
+        .card:hover {
+            transform: scale(1.01);
+        }
+
+        /* hero inicial */
+        .hero {
+            text-align: center;
+            background: linear-gradient(125deg, #fff2ec, #ffe2d6);
+            border-radius: 56px;
+            padding: 2rem 1.2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #ffd5c2;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: #b34e38;
+            letter-spacing: -0.3px;
+        }
+
+        .hero .date-chip {
+            background: #f3d9ce;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #8f3e2c;
+            margin-top: 0.8rem;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            margin-top: 0.8rem;
+            color: #bc6a52;
+            font-style: italic;
+        }
+
+        /* timeline itens */
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            margin-bottom: 1.2rem;
+            background: #fffaf6;
+            padding: 0.9rem 1.2rem;
+            border-radius: 50px;
+            border-left: 6px solid #e6a088;
+        }
+
+        .timeline-icon {
+            font-size: 1.6rem;
+            min-width: 44px;
+            text-align: center;
+            color: #c2785e;
+        }
+
+        .timeline-text h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #aa4f38;
+        }
+
+        .timeline-text p {
+            font-size: 0.85rem;
+            color: #5e3f34;
+        }
+
+        /* versículos grid */
+        .versiculo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .verse-card {
+            background: #fff5ef;
+            border-radius: 28px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+            border: 1px solid #ffded0;
+        }
+
+        .verse-card i {
+            font-size: 1.7rem;
+            color: #da8568;
+            margin-bottom: 0.3rem;
+        }
+
+        .verse-card p {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            line-height: 1.35;
+        }
+
+        .verse-card small {
+            font-size: 0.7rem;
+            color: #b47b66;
+        }
+
+        .declaracao {
+            background: linear-gradient(115deg, #ffede4, #fff5ef);
+            text-align: center;
+            border-radius: 44px;
+        }
+
+        .declaracao h2 {
+            font-family: 'Playfair Display';
+            font-size: 1.9rem;
+            color: #bd5b40;
+        }
+
+        .btn-music-float {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: #e2b9a8;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            backdrop-filter: blur(10px);
+            background: rgba(226, 185, 168, 0.9);
+            color: #48281e;
+            font-size: 1.8rem;
+        }
+
+        .btn-music-float:active {
+            transform: scale(0.94);
+        }
+
+        .tooltip-music {
+            position: fixed;
+            bottom: 92px;
+            right: 28px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            color: white;
+            font-weight: 400;
+            pointer-events: none;
+            z-index: 1000;
+            white-space: nowrap;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #b4846e;
+            opacity: 0.7;
+        }
+
+        /* responsivo */
+        @media (max-width: 550px) {
+            .container {
+                padding: 1rem 1rem 5rem 1rem;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .timeline-item {
+                flex-direction: column;
+                text-align: center;
+                border-left: none;
+                border-top: 4px solid #e6a088;
+            }
+            .timeline-icon {
+                margin: 0 auto;
+            }
+            .btn-music-float {
+                width: 48px;
+                height: 48px;
+                font-size: 1.5rem;
+                bottom: 20px;
+                right: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="app">
-  <!-- LOBBY -->
-  <div id="lobbyScreen" class="screen lobby-container">
-    <h1>🎲 DOMÍNIO MULTI - SALAS</h1>
-    <div class="room-list" id="roomListContainer">
-      <div style="text-align:center; color:#ffd58c;">Carregando salas...</div>
-    </div>
-    <div class="create-room-form">
-      <h3 style="color:#ffeaac;">➕ Criar nova sala</h3>
-      <div class="form-row">
-        <input type="text" id="newRoomName" placeholder="Nome da sala" maxlength="30">
-        <input type="text" id="newPlayerNick" placeholder="Seu nickname" maxlength="20">
-      </div>
-      <div class="form-row">
-        <select id="maxPlayersSelect">
-          <option value="2">2 jogadores</option>
-          <option value="4">4 jogadores</option>
-        </select>
-        <input type="text" id="roomPassword" placeholder="Senha (opcional)">
-        <button id="createRoomBtn">CRIAR SALA</button>
-      </div>
-    </div>
-    <div class="join-code-form">
-      <h3 style="color:#ffeaac;">🔑 Entrar por código</h3>
-      <div class="form-row">
-        <input type="text" id="joinCodeInput" placeholder="Código da sala">
-        <input type="text" id="joinNickname" placeholder="Seu nickname">
-        <button id="joinByCodeBtn">ENTRAR</button>
-      </div>
-    </div>
-    <div id="lobbyStatus" class="status-msg"></div>
-  </div>
 
-  <!-- TELA DO JOGO -->
-  <div id="gameScreen" class="screen hidden">
-    <div class="game-chat-layout">
-      <div class="game-area" id="gameArea">
-        <!-- Placar visível -->
-        <div class="scoreboard" id="scoreBoard"></div>
-        <div class="players-row" id="playersContainer"></div>
-        <div class="board">
-          <div style="text-align:center; color:#ffe0a3;">🃏 MESA CENTRAL</div>
-          <div class="domino-chain" id="boardChain"></div>
-          <div class="status-text" id="gameStatusMsg">Aguardando partida...</div>
+<div class="bg-ornament" id="floatingBg"></div>
+
+<div class="container">
+    <!-- Hero principal com data -->
+    <div class="hero reveal">
+        <h1>✧ você, minha oração atendida ✧</h1>
+        <div class="date-chip">
+            <i class="fas fa-calendar-alt"></i> 15 de janeiro de 2026
         </div>
-        <div class="domino-hand" id="myHand"></div>
-        <div class="action-bar">
-          <button id="startGameBtn">🎮 INICIAR JOGO</button>
-          <button id="restartGameBtn">🔄 REINICIAR</button>
-          <button id="toqueBtn">🔔 TOQUE</button>
-          <button id="passarBtn">⏩ PASSAR</button>
-          <button id="rotateViewBtn">🔄 Girar 180°</button>
-          <button id="leaveRoomBtn">🚪 Sair</button>
+        <div class="subtitle">
+            A primeira mensagem no WhatsApp que mudou minha vida
         </div>
-      </div>
-      <div class="chat-area">
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input-area">
-          <input type="text" id="chatInput" placeholder="Mensagem...">
-          <button id="sendChatBtn">Enviar</button>
-        </div>
-        <div class="reactions">
-          <button class="reaction-btn" data-reaction="🔥">🔥</button>
-          <button class="reaction-btn" data-reaction="😂">😂</button>
-          <button class="reaction-btn" data-reaction="😡">😡</button>
-          <button class="reaction-btn" data-reaction="👏">👏</button>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <!-- Trajetória juntos -->
+    <div class="card reveal">
+        <h2 style="font-family: 'Playfair Display'; text-align: center; margin-bottom: 1rem; color:#b7563b;"><i class="fas fa-feather-alt"></i> nossa caminhada</h2>
+        <div class="timeline-item">
+            <div class="timeline-icon"><i class="fab fa-whatsapp"></i></div>
+            <div class="timeline-text">
+                <h3>💬 15 de janeiro · primeiro "oi"</h3>
+                <p>Duas almas que nem sabiam que Deus já estava escrevendo algo eterno. Do simples nasceu o mais lindo.</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-icon"><i class="fas fa-pray"></i></div>
+            <div class="timeline-text">
+                <h3>🙏 orando um pelo outro</h3>
+                <p>Antes de qualquer abraço, já intercedíamos. Sua fé me fortaleceu. Você me ensinou que o Amor verdadeiro nasce no trono da graça.</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-icon"><i class="fas fa-heartbeat"></i></div>
+            <div class="timeline-text">
+                <h3>🌸 se apaixonando a cada dia</h3>
+                <p>Cada conversa, cada detalhe. Eu me apaixono por quem você é, por sua doçura e coragem. Você me completa.</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-icon"><i class="fas fa-church"></i></div>
+            <div class="timeline-text">
+                <h3>✝️ um futuro com Deus no centro</h3>
+                <p>Sonho em construir uma família que louve ao Senhor, ao seu lado. Ser seu marido, seu amigo, seu porto seguro. Quero ser o homem da sua vida.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Versículos especiais (mulher valorosa + promessas) -->
+    <div class="card reveal">
+        <h2 style="font-family: 'Playfair Display'; text-align: center;">📖 versículos que te declaram</h2>
+        <p style="text-align: center; font-size: 0.9rem; margin-bottom: 1rem; color:#a35138;">vejo Deus em cada detalhe seu</p>
+        <div class="versiculo-grid">
+            <div class="verse-card"><i class="fas fa-gem"></i><p>“Mulher virtuosa, quem a achará? O seu valor excede ao de rubis.”</p><small>Provérbios 31:10</small></div>
+            <div class="verse-card"><i class="fas fa-dove"></i><p>“Tu és toda formosa, amada minha, e não há mancha em ti.”</p><small>Cantares 4:7</small></div>
+            <div class="verse-card"><i class="fas fa-seedling"></i><p>“Porque eu bem sei os pensamentos que tenho a teu respeito: paz, e não mal.”</p><small>Jeremias 29:11</small></div>
+            <div class="verse-card"><i class="fas fa-hands-helping"></i><p>“O amor é paciente, é benigno. Tudo sofre, tudo crê, tudo espera.”</p><small>1 Coríntios 13:4,7</small></div>
+            <div class="verse-card"><i class="fas fa-crown"></i><p>“A sua família chama-a bem-aventurada. A mulher que teme ao Senhor, essa será louvada.”</p><small>Provérbios 31:28,30</small></div>
+            <div class="verse-card"><i class="fas fa-star-of-life"></i><p>“Ora, o Deus de esperança vos encha de todo o gozo e paz.”</p><small>Romanos 15:13</small></div>
+        </div>
+        <div style="background:#f9e9e1; border-radius: 32px; padding: 0.8rem; text-align: center; margin-top: 1rem;">
+            <i class="fas fa-ring"></i> <strong>Mateus 19:6</strong> — “Portanto, o que Deus ajuntou, não o separe o homem.”
+        </div>
+    </div>
+
+    <!-- Declaração principal + família e propósito -->
+    <div class="card declaracao reveal">
+        <h2>💗 meu querer mais sincero</h2>
+        <p><i class="fas fa-quote-left" style="color:#c15e41;"></i> Meu Bem, mesmo nesse momento difícil com seu pai no hospital e você se sentindo frágil, quero que saiba: você é mais forte do que imagina, e eu estou orando por vocês todos os dias. Deus tem cuidado de cada detalhe.</p>
+        <p>Você é a <strong>mulher valorosa</strong> que eu escolhi amar. Quero ser o homem da sua vida, te proteger, te abraçar e construir uma família onde Jesus seja o alicerce. <br> Quero viver ao seu lado cada estação, e juntos seguirmos em direção ao coração de Deus.</p>
+        <p style="font-weight: 500;">Eu te vejo como presente dEle. E eu prometo buscar a Deus com você, honrar teu pai e cuidar de você com toda ternura.</p>
+        <p style="font-family: 'Playfair Display'; font-size: 1.3rem; margin-top: 1rem;">Com todo amor, <br> seu futuro companheiro eterno ♡</p>
+    </div>
+
+    <!-- Mensagem de conforto para o momento hospitalar -->
+    <div class="card reveal" style="background: #fef1ea; text-align: center;">
+        <i class="fas fa-hand-holding-heart" style="font-size: 2.2rem; color:#c2856b;"></i>
+        <p style="margin-top: 0.5rem;">✨ “O Senhor é o teu refúgio e a tua fortaleza” (Salmo 91:2). Meu Amor, você não está só. Estou aqui, orando sem cessar pelo seu pai e pela sua saúde. Sei que Deus está no controle. ❤️‍🩹</p>
+        <p><i class="fas fa-praying-hands"></i> descansa no amor dEle e no meu carinho por você.</p>
+    </div>
+
+    <footer>
+        <p style="letter-spacing: 1px;">feito com oração e gratidão • nossa história é um louvor</p>
+        <i class="fas fa-infinity"></i> <i class="fas fa-church"></i>
+    </footer>
 </div>
 
+<!-- Botão flutuante da música (player escondido original, agora um ícone minimalista) -->
+<button id="floatMusicBtn" class="btn-music-float" aria-label="Tocar música ambiente">
+    <i class="fas fa-headphones"></i>
+</button>
+<div id="musicTooltip" class="tooltip-music">🎵 ambiente suave</div>
+
 <script>
-  // ==================== CONFIG SUPABASE ====================
-  const SUPABASE_URL = "https://wkcfgbtsmsfksfiqavvc.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_cDI94Uts3TOXG2kA9IzHAw_OsvZcW4n";
-  // ========================================================
-
-  let supabaseClient = null;
-  let currentRoomId = null;
-  let currentNick = null;
-  let currentPlayerId = null;
-  let rotationAngle = 0;
-  let heartbeatInterval = null;
-  let gameSubscription = null;
-  let chatSubscription = null;
-  let botInterval = null; // para controle do bot automático
-
-  // ==================== DOMINO RULES ====================
-  const DominoRules = {
-    createDeck() {
-      let deck = [];
-      for (let i = 0; i <= 6; i++)
-        for (let j = i; j <= 6; j++)
-          deck.push({ left: i, right: j });
-      return deck;
-    },
-    shuffle(deck) {
-      for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-      }
-      return deck;
-    },
-    canPlay(piece, leftEnd, rightEnd, isFirstMove) {
-      if (isFirstMove) return true;
-      return (piece.left === leftEnd || piece.right === leftEnd || piece.left === rightEnd || piece.right === rightEnd);
-    },
-    applyPlay(board, leftEnd, rightEnd, piece, side) {
-      let newBoard = [...board];
-      let newLeft = leftEnd;
-      let newRight = rightEnd;
-      if (board.length === 0) {
-        newBoard.push(piece);
-        newLeft = piece.left;
-        newRight = piece.right;
-        return { newBoard, newLeft, newRight };
-      }
-      if (side === 'left') {
-        if (piece.right === leftEnd) {
-          newBoard.unshift({ left: piece.left, right: piece.right });
-          newLeft = piece.left;
-        } else if (piece.left === leftEnd) {
-          newBoard.unshift({ left: piece.right, right: piece.left });
-          newLeft = piece.right;
-        } else return null;
-      } else if (side === 'right') {
-        if (piece.left === rightEnd) {
-          newBoard.push({ left: piece.left, right: piece.right });
-          newRight = piece.right;
-        } else if (piece.right === rightEnd) {
-          newBoard.push({ left: piece.right, right: piece.left });
-          newRight = piece.left;
-        } else return null;
-      } else return null;
-      return { newBoard, newLeft, newRight };
-    },
-    handSum(hand) {
-      return hand.reduce((s, p) => s + p.left + p.right, 0);
-    },
-    isGameBlocked(state) {
-      if (!state.hands) return false;
-      const playersWithHands = state.players.filter(p => state.hands[p.id] && state.hands[p.id].length > 0);
-      if (playersWithHands.length !== state.players.length) return false;
-      if (state.stock.length > 0) return false;
-      return state.players.every(p => {
-        const hand = state.hands[p.id];
-        if (!hand || hand.length === 0) return true;
-        return !hand.some(piece => DominoRules.canPlay(piece, state.leftEnd, state.rightEnd, state.board.length === 0));
-      });
-    },
-    getWinnerBySum(state) {
-      let bestPlayer = null;
-      let bestSum = Infinity;
-      for (let p of state.players) {
-        const sum = DominoRules.handSum(state.hands[p.id]);
-        if (sum < bestSum) {
-          bestSum = sum;
-          bestPlayer = p.id;
+    // ---------- SCROLL REVEAL (cards surgem ao passar) ----------
+    const revealElements = document.querySelectorAll('.reveal');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                // pode manter ativo, não precisa remover classe
+            }
+        });
+    }, { threshold: 0.15, rootMargin: "0px 0px -20px 0px" });
+    
+    revealElements.forEach(el => observer.observe(el));
+    
+    // Forçar ativação de alguns que já estão visíveis inicialmente (pequeno delay)
+    setTimeout(() => {
+        revealElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100) {
+                el.classList.add('active');
+            }
+        });
+    }, 200);
+    
+    // ---------- MÚSICA FLUTUANTE OCULTA (player escondido, volume baixo) ----------
+    // Caminho da música: pasta "music/background-music.mp3" (conforme solicitado)
+    // Altere se necessário: 
+    const MUSIC_PATH = "music/Valeu_esperar.mp3";
+    let audio = null;
+    let isPlaying = false;
+    const musicBtn = document.getElementById('floatMusicBtn');
+    const tooltip = document.getElementById('musicTooltip');
+    
+    function initAudio() {
+        if (!audio) {
+            audio = new Audio(MUSIC_PATH);
+            audio.loop = true;
+            audio.volume = 0.16;   // bem baixinho, só para ambiente
+            audio.preload = "auto";
+            audio.onerror = () => {
+                console.warn("Arquivo de música não encontrado. Verifique se existe a pasta 'music' e o arquivo background-music.mp3");
+                if(musicBtn) {
+                    musicBtn.style.background = "#bda89c";
+                    musicBtn.innerHTML = '<i class="fas fa-music-slash"></i>';
+                    if(tooltip) tooltip.innerText = "🎵 música não encontrada";
+                    setTimeout(() => {
+                        if(tooltip) tooltip.style.opacity = "0.6";
+                    }, 2000);
+                }
+            };
         }
-      }
-      return bestPlayer;
-    },
-    getSpecialWin(board, lastPiece, playerHandAfter) {
-      if (playerHandAfter.length !== 0) return null;
-      if (!lastPiece) return null;
-      if (lastPiece.left === lastPiece.right) return { type: "carroca", points: 2 };
-      if (board.length >= 2 && board[0].left === board[board.length - 1].right) return { type: "lae lo", points: 3 };
-      return { type: "normal", points: 1 };
+        return audio;
     }
-  };
-
-  // ==================== AUDIO (SOM DE PEÇA) ====================
-  function playPieceSound() {
-    try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      oscillator.frequency.value = 880;
-      gainNode.gain.value = 0.2;
-      oscillator.start();
-      gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
-      oscillator.stop(audioCtx.currentTime + 0.3);
-    } catch(e) { console.log("Audio not supported"); }
-  }
-
-  // ==================== UI HELPERS ====================
-  function showLobby() {
-    document.getElementById('lobbyScreen').classList.remove('hidden');
-    document.getElementById('gameScreen').classList.add('hidden');
-    loadRoomList();
-  }
-  function showGame() {
-    document.getElementById('lobbyScreen').classList.add('hidden');
-    document.getElementById('gameScreen').classList.remove('hidden');
-  }
-
-  async function initSupabase() {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-
-  // Sanitiza estado corrompido
-  function sanitizeGameState(state) {
-    if (!state) return { players: [], hands: {}, stock: [], board: [], leftEnd: null, rightEnd: null, turn: null, status: 'waiting', winner: null, winType: null, scores: {} };
-    if (state.status === 'finished') {
-      state.status = 'waiting';
-      state.winner = null;
-      state.winType = null;
-    }
-    if (!state.scores) state.scores = {};
-    if (!state.hands) state.hands = {};
-    if (!state.players) state.players = [];
-    return state;
-  }
-
-  // ==================== LISTA DE SALAS ====================
-  async function loadRoomList() {
-    const { data, error } = await supabaseClient
-      .from('rooms')
-      .select('id, room_name, max_players, password, players_list')
-      .in('status', ['open', 'playing']);
-    if (error) return;
-    const container = document.getElementById('roomListContainer');
-    if (!data || data.length === 0) {
-      container.innerHTML = '<div style="text-align:center; color:#ffd58c;">Nenhuma sala disponível.</div>';
-      return;
-    }
-    container.innerHTML = '';
-    for (let room of data) {
-      const playersCount = room.players_list ? room.players_list.length : 0;
-      const maxPlayers = room.max_players || 2;
-      const isProtected = room.password && room.password.length > 0;
-      const div = document.createElement('div'); div.className='room-item';
-      div.innerHTML = `<div class="room-info"><div class="room-name">🏠 ${room.room_name || room.id} (${playersCount}/${maxPlayers})</div><div class="room-details">Código: ${room.id} ${isProtected?'🔒 Protegida':'🔓 Aberta'}</div></div><button class="join-room-btn" data-room-id="${room.id}" data-protected="${isProtected}">Entrar</button>`;
-      container.appendChild(div);
-    }
-    document.querySelectorAll('.join-room-btn').forEach(btn => btn.addEventListener('click', async (e) => {
-      const roomId = btn.dataset.roomId;
-      const isProtected = btn.dataset.protected === 'true';
-      let password = null;
-      if (isProtected) { password = prompt("Senha:"); if (!password) return; }
-      const nick = prompt("Seu nickname:") || "Anonimo";
-      await joinRoomById(roomId, nick, password);
-    }));
-  }
-
-  async function joinRoomById(roomId, nickname, password) {
-    const { data: room, error } = await supabaseClient.from('rooms').select('*').eq('id', roomId).single();
-    if (error || !room) { alert("Sala não encontrada"); return; }
-    if (room.password && room.password !== password) { alert("Senha incorreta"); return; }
-    const playersList = room.players_list || [];
-    const maxPlayers = room.max_players || 2;
-    if (playersList.length >= maxPlayers) { alert(`Sala cheia (max ${maxPlayers})`); return; }
-    const { data: playerData, error: playerError } = await supabaseClient.from('players').insert({ nickname, room_id: roomId, last_seen: new Date() }).select().single();
-    if (playerError) { alert("Erro: "+playerError.message); return; }
-    currentPlayerId = playerData.id; currentRoomId = roomId; currentNick = nickname;
-    let gameState = room.game_state || { players: [], hands: {}, stock: [], board: [], leftEnd: null, rightEnd: null, turn: null, status: 'waiting', winner: null, winType: null, scores: {} };
-    gameState = sanitizeGameState(gameState);
-    if (!gameState.players) gameState.players = [];
-    gameState.players.push({ id: currentPlayerId, nick: nickname });
-    await supabaseClient.from('rooms').update({ players_list: [...playersList, nickname], game_state: gameState }).eq('id', roomId);
-    await setupSubscriptionsAndGame(roomId);
-  }
-
-  async function createNewRoom() {
-    const roomName = document.getElementById('newRoomName').value.trim();
-    const nickname = document.getElementById('newPlayerNick').value.trim();
-    const maxPlayers = parseInt(document.getElementById('maxPlayersSelect').value);
-    const password = document.getElementById('roomPassword').value.trim();
-    if (!roomName || !nickname) { alert("Preencha nome da sala e nickname"); return; }
-    const { count } = await supabaseClient.from('rooms').select('*', { count: 'exact', head: true });
-    if (count >= 10) { alert("Limite de 10 salas"); return; }
-    const roomId = Math.random().toString(36).substring(2,8).toUpperCase();
-    const initialState = { players: [], hands: {}, stock: [], board: [], leftEnd: null, rightEnd: null, turn: null, status: 'waiting', winner: null, winType: null, scores: {} };
-    const { error: roomError } = await supabaseClient.from('rooms').insert({ id: roomId, room_name: roomName, max_players: maxPlayers, password: password || null, game_state: initialState, players_list: [], status: 'open' });
-    if (roomError) { alert("Erro: "+roomError.message); return; }
-    const { data: playerData, error: playerError } = await supabaseClient.from('players').insert({ nickname, room_id: roomId, last_seen: new Date() }).select().single();
-    if (playerError) { alert("Erro ao criar jogador"); return; }
-    currentPlayerId = playerData.id; currentRoomId = roomId; currentNick = nickname;
-    initialState.players.push({ id: currentPlayerId, nick: nickname });
-    await supabaseClient.from('rooms').update({ players_list: [nickname], game_state: initialState }).eq('id', roomId);
-    await setupSubscriptionsAndGame(roomId);
-  }
-
-  async function joinByCode() {
-    const code = document.getElementById('joinCodeInput').value.trim().toUpperCase();
-    const nickname = document.getElementById('joinNickname').value.trim();
-    if (!code || !nickname) { alert("Preencha código e nickname"); return; }
-    await joinRoomById(code, nickname, null);
-  }
-
-  // ==================== CONTROLE DO JOGO ====================
-  async function startGameManual() {
-    const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single();
-    if (!room) return;
-    let state = sanitizeGameState(room.game_state);
-    if (state.players.length < 2) { alert("Precisa de pelo menos 2 jogadores!"); return; }
-    let deck = DominoRules.createDeck();
-    DominoRules.shuffle(deck);
-    const hands = {};
-    state.players.forEach(p => { hands[p.id] = deck.splice(0, 7); });
-    const newState = { ...state, hands, stock: deck, board: [], leftEnd: null, rightEnd: null, turn: state.players[0].id, status: 'playing', winner: null, winType: null };
-    await supabaseClient.from('rooms').update({ game_state: newState }).eq('id', currentRoomId);
-  }
-
-  async function restartGame() {
-    const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single();
-    if (!room) return;
-    let state = sanitizeGameState(room.game_state);
-    const newState = { ...state, hands: {}, stock: [], board: [], leftEnd: null, rightEnd: null, turn: null, status: 'waiting', winner: null, winType: null, scores: state.scores || {} };
-    await supabaseClient.from('rooms').update({ game_state: newState }).eq('id', currentRoomId);
-  }
-
-  async function tryPlayPiece(piece, side) {
-    if (!currentRoomId || !currentPlayerId) return;
-    playPieceSound(); // som ao jogar
-    const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single();
-    if (!room || !room.game_state) return;
-    let state = sanitizeGameState(room.game_state);
-    if (state.status !== 'playing') { alert("Jogo finalizado!"); return; }
-    if (state.turn !== currentPlayerId) { alert("Não é sua vez!"); return; }
-    const hand = state.hands[currentPlayerId];
-    if (!hand) return;
-    const pieceIndex = hand.findIndex(p => p.left===piece.left && p.right===piece.right);
-    if (pieceIndex === -1) return;
-    const isValid = DominoRules.canPlay(piece, state.leftEnd, state.rightEnd, state.board.length===0);
-    if (!isValid) { alert("Peça não encaixa!"); return; }
-    let chosenSide = side;
-    if (state.board.length===0) chosenSide = 'right';
-    const result = DominoRules.applyPlay(state.board, state.leftEnd, state.rightEnd, piece, chosenSide);
-    if (!result) { alert("Erro ao encaixar"); return; }
-    const newHand = [...hand]; newHand.splice(pieceIndex,1);
-    const newState = { ...state, board: result.newBoard, leftEnd: result.newLeft, rightEnd: result.newRight, hands: { ...state.hands, [currentPlayerId]: newHand }, lastMoveBy: currentPlayerId, lastPiece: piece };
-    if (newHand.length === 0) {
-      newState.status = 'finished';
-      newState.winner = currentPlayerId;
-      const special = DominoRules.getSpecialWin(newState.board, piece, newHand);
-      newState.winType = special ? special.type : 'normal';
-      // Pontuação
-      if (!newState.scores) newState.scores = {};
-      newState.scores[currentPlayerId] = (newState.scores[currentPlayerId] || 0) + 1;
-      if (newState.scores[currentPlayerId] >= 6) {
-        alert(`🏆 ${state.players.find(p=>p.id===currentPlayerId)?.nick} venceu o campeonato!`);
-        newState.scores = {};
-        newState.status = 'waiting';
-        newState.hands = {};
-      } else {
-        const otherPlayers = newState.players.filter(p => p.id !== currentPlayerId);
-        const someoneHasPoints = otherPlayers.some(p => (newState.scores[p.id] || 0) > 0);
-        if (newState.scores[currentPlayerId] === 5 && !someoneHasPoints) {
-          alert(`🔥 ${state.players.find(p=>p.id===currentPlayerId)?.nick} ganhou de 5x0!`);
-          newState.scores = {};
-          newState.status = 'waiting';
-          newState.hands = {};
+    
+    function toggleMusic() {
+        const audioPlayer = initAudio();
+        if (!audioPlayer) return;
+        
+        if (isPlaying) {
+            audioPlayer.pause();
+            isPlaying = false;
+            musicBtn.innerHTML = '<i class="fas fa-headphones"></i>';
+            musicBtn.style.background = "#e2b9a8";
+            if(tooltip) tooltip.innerText = "🎵 música pausada";
+            setTimeout(() => {
+                if(tooltip) tooltip.style.opacity = "0.5";
+                setTimeout(() => {
+                    if(tooltip && tooltip.innerText === "🎵 música pausada") tooltip.innerText = "🎵 ambiente suave";
+                }, 1800);
+            }, 150);
+        } else {
+            // tentar tocar (usuário interagiu, então autoplay permitido)
+            const playPromise = audioPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    musicBtn.innerHTML = '<i class="fas fa-play-circle"></i>';
+                    musicBtn.style.background = "#cb9a82";
+                    if(tooltip) tooltip.innerText = "♫ tocando baixinho ♫";
+                    setTimeout(() => {
+                        if(tooltip && tooltip.innerText === "♫ tocando baixinho ♫") tooltip.innerText = "🎵 ambiente suave";
+                    }, 2000);
+                }).catch(err => {
+                    console.warn("Não foi possível iniciar música: ", err);
+                    if(tooltip) tooltip.innerText = "⚠️ toque novamente";
+                    setTimeout(() => {
+                        if(tooltip) tooltip.innerText = "🎵 ambiente suave";
+                    }, 1500);
+                });
+            }
         }
-      }
-    } else {
-      const players = newState.players;
-      const currentIdx = players.findIndex(p => p.id === currentPlayerId);
-      const nextIdx = (currentIdx + 1) % players.length;
-      newState.turn = players[nextIdx].id;
     }
-    if (newState.status === 'playing' && newState.board.length > 0 && DominoRules.isGameBlocked(newState)) {
-      const winnerId = DominoRules.getWinnerBySum(newState);
-      newState.status = 'finished';
-      newState.winner = winnerId;
-      newState.winType = 'blocked';
+    
+    if (musicBtn) {
+        musicBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleMusic();
+            // feedback haptic-like visual
+            musicBtn.style.transform = "scale(0.92)";
+            setTimeout(() => { if(musicBtn) musicBtn.style.transform = ""; }, 150);
+        });
     }
-    await supabaseClient.from('rooms').update({ game_state: newState }).eq('id', currentRoomId);
-  }
-
-  async function toqueAction() { /* mesmo código anterior, omitido por brevidade mas igual ao funcional */ 
-    if (!currentRoomId || !currentPlayerId) return;
-    const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single();
-    if (!room || !room.game_state) return;
-    let state = sanitizeGameState(room.game_state);
-    if (state.status !== 'playing') { alert("Jogo finalizado"); return; }
-    if (state.turn !== currentPlayerId) { alert("Não é sua vez"); return; }
-    const hand = state.hands[currentPlayerId];
-    const canPlay = hand.some(p => DominoRules.canPlay(p, state.leftEnd, state.rightEnd, state.board.length === 0));
-    if (canPlay) { alert("Você tem jogadas!"); return; }
-    let newState = { ...state };
-    if (newState.stock && newState.stock.length > 0) {
-      const drawn = newState.stock.pop();
-      const newHand = [...hand, drawn];
-      newState.hands = { ...newState.hands, [currentPlayerId]: newHand };
-      const nowCanPlay = newHand.some(p => DominoRules.canPlay(p, newState.leftEnd, newState.rightEnd, newState.board.length === 0));
-      if (!nowCanPlay) {
-        const players = newState.players;
-        const idx = players.findIndex(p => p.id === currentPlayerId);
-        newState.turn = players[(idx + 1) % players.length];
-      }
-    } else {
-      const players = newState.players;
-      const idx = players.findIndex(p => p.id === currentPlayerId);
-      newState.turn = players[(idx + 1) % players.length];
-    }
-    await supabaseClient.from('rooms').update({ game_state: newState }).eq('id', currentRoomId);
-  }
-
-  async function passarTurno() { /* similar, mantido funcional */ 
-    if (!currentRoomId || !currentPlayerId) return;
-    const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single();
-    if (!room || !room.game_state) return;
-    let state = sanitizeGameState(room.game_state);
-    if (state.status !== 'playing') { alert("Jogo finalizado"); return; }
-    if (state.turn !== currentPlayerId) { alert("Não é sua vez"); return; }
-    const hand = state.hands[currentPlayerId];
-    const canPlay = hand.some(p => DominoRules.canPlay(p, state.leftEnd, state.rightEnd, state.board.length === 0));
-    if (canPlay) { alert("Você tem jogadas! Não pode passar."); return; }
-    const players = state.players;
-    const idx = players.findIndex(p => p.id === currentPlayerId);
-    const newTurn = players[(idx + 1) % players.length].id;
-    const newState = { ...state, turn: newTurn };
-    await supabaseClient.from('rooms').update({ game_state: newState }).eq('id', currentRoomId);
-  }
-
-  // Renderização com placar
-  function renderGameUI(state) {
-    if (!state) return;
-    // Placar
-    const scoreDiv = document.getElementById('scoreBoard');
-    scoreDiv.innerHTML = '';
-    if (state.scores) {
-      for (let p of state.players) {
-        const pts = state.scores[p.id] || 0;
-        const span = document.createElement('div'); span.className = 'score-item';
-        span.innerText = `${p.nick}: ${pts}`;
-        scoreDiv.appendChild(span);
-      }
-    }
-    // restante da UI (board, mãos, etc) igual ao anterior, omitido para caber no limite, mas funcional
-    // (o código completo roda normalmente)
-    const boardDiv = document.getElementById('boardChain');
-    boardDiv.innerHTML = '';
-    if (state.board?.length) state.board.forEach(p => { const div = document.createElement('div'); div.className='domino-piece'; div.innerText=`${p.left}|${p.right}`; boardDiv.appendChild(div); });
-    else boardDiv.innerHTML = '<div style="color:#ffdca8;">Nenhuma peça</div>';
-    const myHand = state.hands?.[currentPlayerId] || [];
-    const handContainer = document.getElementById('myHand');
-    handContainer.innerHTML = '';
-    myHand.forEach(piece => {
-      const pieceDiv = document.createElement('div'); pieceDiv.className='domino-piece'; pieceDiv.innerText=`${piece.left}|${piece.right}`;
-      const isValid = DominoRules.canPlay(piece, state.leftEnd, state.rightEnd, state.board.length===0);
-      if (isValid && state.turn===currentPlayerId && state.status==='playing') pieceDiv.classList.add('valid-highlight');
-      pieceDiv.onclick = () => {
-        if (state.turn!==currentPlayerId) return alert("Não é sua vez");
-        if (state.status!=='playing') return;
-        if (!isValid) return alert("Peça não encaixa");
-        const leftMatch = (piece.left===state.leftEnd || piece.right===state.leftEnd);
-        const rightMatch = (piece.left===state.rightEnd || piece.right===state.rightEnd);
-        if (state.board.length>0 && leftMatch && rightMatch) {
-          const modal = document.createElement('div'); modal.className='side-choice-modal';
-          modal.innerHTML = `<p>Escolha lado</p><button id="chLeft">Esquerda</button><button id="chRight">Direita</button><button id="chCancel">Cancelar</button>`;
-          document.body.appendChild(modal);
-          document.getElementById('chLeft').onclick = () => { tryPlayPiece(piece,'left'); modal.remove(); };
-          document.getElementById('chRight').onclick = () => { tryPlayPiece(piece,'right'); modal.remove(); };
-          document.getElementById('chCancel').onclick = () => modal.remove();
-        } else if (leftMatch) tryPlayPiece(piece,'left');
-        else tryPlayPiece(piece,'right');
-      };
-      handContainer.appendChild(pieceDiv);
+    
+    // Pré-carregar áudio sem tocar automaticamente
+    window.addEventListener('load', () => {
+        const preloadAudio = initAudio();
+        if (preloadAudio) preloadAudio.load();
+        
+        // Criar elementos flutuantes de fundo delicados (somente decor)
+        const bgContainer = document.getElementById('floatingBg');
+        if (bgContainer) {
+            const icons = ['🌸', '🕊️', '✨', '❤️', '🌿', '🌟', '💗'];
+            for (let i = 0; i < 40; i++) {
+                const el = document.createElement('div');
+                el.classList.add('float-flower');
+                el.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+                const size = Math.random() * 1.6 + 0.8;
+                el.style.fontSize = size + 'rem';
+                el.style.left = Math.random() * 100 + '%';
+                el.style.animationDuration = Math.random() * 18 + 12 + 's';
+                el.style.animationDelay = Math.random() * 15 + 's';
+                el.style.opacity = Math.random() * 0.2 + 0.08;
+                bgContainer.appendChild(el);
+            }
+        }
     });
-    const playersContainer = document.getElementById('playersContainer');
-    playersContainer.innerHTML = '';
-    if (state.players) state.players.forEach(p => {
-      const card = document.createElement('div'); card.className='player-card';
-      if (state.turn===p.id) card.classList.add('active-turn');
-      let pieceCount = state.hands[p.id]?.length || 0;
-      card.innerText = `${p.nick} (${pieceCount}) ${p.id===currentPlayerId?'👈':''}`;
-      playersContainer.appendChild(card);
+    
+    // Esconder tooltip após alguns segundos se o mouse ficar parado? mas não necessário.
+    // efeito de tooltip sutil
+    let tooltipTimeout;
+    if (musicBtn && tooltip) {
+        musicBtn.addEventListener('mouseenter', () => {
+            if (tooltip) tooltip.style.opacity = "0.9";
+        });
+        musicBtn.addEventListener('mouseleave', () => {
+            if (tooltip) tooltip.style.opacity = "0.5";
+        });
+        tooltip.style.opacity = "0.7";
+    }
+    
+    // garantir que os cards com reveal que ainda não ativaram por completo devido a imagens ou load, reforce ao scroll
+    window.addEventListener('scroll', () => {
+        revealElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 80) {
+                el.classList.add('active');
+            }
+        });
     });
-    const statusDiv = document.getElementById('gameStatusMsg');
-    if (state.status==='playing') {
-      const currentPlayerNick = state.players.find(p=>p.id===state.turn)?.nick || '?';
-      statusDiv.innerHTML = `🎲 Turno: ${currentPlayerNick} | Monte: ${state.stock?.length||0}`;
-    } else {
-      const winnerNick = state.players.find(p=>p.id===state.winner)?.nick || 'Alguém';
-      let winText = `🏆 Vencedor: ${winnerNick}`;
-      if (state.winType==='carroca') winText += ' (Carroça! +2 pts)';
-      else if (state.winType==='lae lo') winText += ' (Lá e Ló! +3 pts)';
-      else if (state.winType==='blocked') winText += ' (Bloqueio - menor soma)';
-      statusDiv.innerHTML = winText;
-    }
-    document.getElementById('gameArea').style.transform = rotationAngle===180 ? 'rotate(180deg)' : 'none';
-  }
-
-  // Bot automático (joga se houver apenas 1 humano e o resto bot)
-  function startBotIfNeeded(state) {
-    if (state.status !== 'playing') return;
-    if (state.turn === currentPlayerId) return; // humano joga
-    const botPlayer = state.players.find(p => p.id === state.turn);
-    if (!botPlayer) return;
-    // se o bot for um jogador real (não é o humano atual), simula jogada
-    if (botInterval) clearTimeout(botInterval);
-    botInterval = setTimeout(async () => {
-      const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single();
-      if (!room) return;
-      let st = sanitizeGameState(room.game_state);
-      if (st.turn !== botPlayer.id) return;
-      const hand = st.hands[botPlayer.id];
-      if (!hand) return;
-      const playable = hand.filter(p => DominoRules.canPlay(p, st.leftEnd, st.rightEnd, st.board.length===0));
-      if (playable.length > 0) {
-        const piece = playable[0];
-        const leftMatch = (piece.left===st.leftEnd || piece.right===st.leftEnd);
-        const rightMatch = (piece.left===st.rightEnd || piece.right===st.rightEnd);
-        let side = 'right';
-        if (leftMatch && !rightMatch) side = 'left';
-        else if (leftMatch && rightMatch) side = Math.random() < 0.5 ? 'left' : 'right';
-        await tryPlayPiece(piece, side);
-      } else {
-        // passa turno
-        await passarTurno();
-      }
-    }, 800);
-  }
-
-  // Subscriptions sem auto start
-  async function setupSubscriptionsAndGame(roomId) {
-    showGame();
-    if (heartbeatInterval) clearInterval(heartbeatInterval);
-    heartbeatInterval = setInterval(async () => { if (currentPlayerId) await supabaseClient.from('players').update({ last_seen: new Date() }).eq('id', currentPlayerId); }, 20000);
-    if (gameSubscription) await gameSubscription.unsubscribe();
-    gameSubscription = supabaseClient.channel(`room-${roomId}`).on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}` }, async (payload) => {
-      if (payload.new && payload.new.game_state) {
-        let state = sanitizeGameState(payload.new.game_state);
-        renderGameUI(state);
-        startBotIfNeeded(state);
-      }
-    }).subscribe();
-    if (chatSubscription) await chatSubscription.unsubscribe();
-    chatSubscription = supabaseClient.channel(`chat-${roomId}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `room_id=eq.${roomId}` }, payload => {
-      const container = document.getElementById('chatMessages');
-      const div = document.createElement('div'); div.className='chat-message';
-      div.innerHTML = `<strong>${payload.new.nickname}:</strong> ${payload.new.content}`;
-      container.appendChild(div); container.scrollTop = container.scrollHeight;
-    }).subscribe();
-    const { data: roomData } = await supabaseClient.from('rooms').select('game_state').eq('id', roomId).single();
-    if (roomData?.game_state) {
-      let state = sanitizeGameState(roomData.game_state);
-      renderGameUI(state);
-      startBotIfNeeded(state);
-    }
-  }
-
-  async function sendMessage(text, isReaction=false) {
-    if (!currentRoomId || !currentNick) return;
-    await supabaseClient.from('messages').insert({ room_id: currentRoomId, nickname: currentNick, content: text, type: isReaction?'reaction':'message' });
-  }
-
-  window.onload = async () => {
-    await initSupabase();
-    showLobby();
-    document.getElementById('createRoomBtn').onclick = createNewRoom;
-    document.getElementById('joinByCodeBtn').onclick = joinByCode;
-    document.getElementById('startGameBtn').onclick = startGameManual;
-    document.getElementById('restartGameBtn').onclick = restartGame;
-    document.getElementById('sendChatBtn').onclick = () => { const input = document.getElementById('chatInput'); if (input.value.trim()) sendMessage(input.value.trim()); input.value=''; };
-    document.querySelectorAll('.reaction-btn').forEach(btn => btn.onclick = () => sendMessage(`reagiu: ${btn.dataset.reaction}`, true));
-    document.getElementById('toqueBtn').onclick = toqueAction;
-    document.getElementById('passarBtn').onclick = passarTurno;
-    document.getElementById('rotateViewBtn').onclick = () => { rotationAngle = rotationAngle===180?0:180; (async () => { const { data: room } = await supabaseClient.from('rooms').select('game_state').eq('id', currentRoomId).single(); if (room?.game_state) renderGameUI(sanitizeGameState(room.game_state)); })(); };
-    document.getElementById('leaveRoomBtn').onclick = () => { if (confirm("Sair da sala?")) location.reload(); };
-    setInterval(() => { if (!document.getElementById('lobbyScreen').classList.contains('hidden')) loadRoomList(); }, 5000);
-  };
 </script>
 </body>
 </html>
