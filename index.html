@@ -1,604 +1,659 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Nossa História ✧ Você é meu presente de Deus</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>🎂 Level 27 – O Jogo do Amor ❤️</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: linear-gradient(145deg, #fef7f2 0%, #ffe6de 100%);
-            font-family: 'Poppins', sans-serif;
-            color: #392d2a;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Press Start 2P', 'Courier New', monospace;
+            padding: 12px;
         }
 
-        .bg-ornament {
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .float-flower {
-            position: absolute;
-            font-size: 1.2rem;
-            color: rgba(221, 150, 125, 0.12);
-            animation: floatAround 22s infinite linear;
-            user-select: none;
-        }
-
-        @keyframes floatAround {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.4; }
-            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
-        }
-
-        .container {
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 1.8rem 1.2rem 5rem 1.2rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Animação aprimorada para esconder MESMO até rolar */
-        .reveal {
-            opacity: 0;
-            transform: translateY(60px); /* Aumentei a distância para ficar bem escondido */
-            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-            will-change: transform, opacity;
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .music-notice {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 30px;
-            padding: 0.8rem 1.2rem;
-            font-size: 0.9rem;
-            color: #b34e38;
-            margin-bottom: 1.5rem;
-            border: 1px dashed #e2b9a8;
-            display: inline-block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 100%;
-            font-weight: 500;
-        }
-
-        .card {
-            background: rgba(255, 248, 244, 0.92);
-            backdrop-filter: blur(2px);
-            border-radius: 40px;
-            padding: 1.8rem 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(253, 207, 186, 0.6);
-        }
-
-        .hero {
-            text-align: center;
-            background: linear-gradient(125deg, #fff2ec, #ffe2d6);
-            border-radius: 56px;
-            padding: 2.5rem 1.2rem;
-            margin-bottom: 3rem; /* Espaço extra para não mostrar o próximo card */
-            border: 1px solid #ffd5c2;
-            animation: fadeIn 1s ease-out forwards; /* Animação simples de entrada inicial */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.3rem;
-            font-weight: 800;
-            color: #b34e38;
-            letter-spacing: -0.3px;
-        }
-
-        .hero .date-chip {
-            background: #f3d9ce;
-            display: inline-block;
-            padding: 0.4rem 1.2rem;
-            border-radius: 60px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #8f3e2c;
-            margin-top: 1rem;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            margin-top: 1rem;
-            color: #bc6a52;
-            font-style: italic;
-        }
-
-        .timeline-item {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-            margin-bottom: 1.2rem;
-            background: #fffaf6;
-            padding: 1.2rem;
-            border-radius: 30px;
-            border-left: 6px solid #e6a088;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-        }
-
-        .timeline-icon {
-            font-size: 1.6rem;
-            min-width: 44px;
-            text-align: center;
-            color: #c2785e;
-        }
-
-        .timeline-text h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #aa4f38;
-            margin-bottom: 0.3rem;
-        }
-
-        .timeline-text p {
-            font-size: 0.9rem;
-            color: #5e3f34;
-            line-height: 1.5;
-        }
-
-        .versiculo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 1.2rem;
-            margin-top: 1.5rem;
-        }
-
-        .verse-card {
-            background: #fff5ef;
-            border-radius: 28px;
-            padding: 1.2rem;
-            text-align: center;
-            border: 1px solid #ffded0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-        }
-
-        .verse-card i {
-            font-size: 1.7rem;
-            color: #da8568;
-            margin-bottom: 0.5rem;
-        }
-
-        .verse-card p {
-            font-family: 'Playfair Display', serif;
-            font-weight: 500;
-            font-size: 0.95rem;
-            margin: 0.5rem 0;
-            line-height: 1.4;
-        }
-
-        .verse-card small {
-            font-size: 0.75rem;
-            color: #b47b66;
-            font-weight: 600;
-        }
-
-        .declaracao {
-            background: linear-gradient(115deg, #ffede4, #fff5ef);
-            text-align: center;
-            border-radius: 44px;
-        }
-
-        .declaracao h2 {
-            font-family: 'Playfair Display';
-            font-size: 2rem;
-            color: #bd5b40;
-            margin-bottom: 1.5rem;
-        }
-        
-        .declaracao p {
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-
-        .letra-musica {
-            background: transparent;
-            text-align: center;
-            padding: 2rem 1rem;
-        }
-
-        .letra-musica h2 {
-            font-family: 'Playfair Display';
-            font-size: 1.8rem;
-            color: #b7563b;
-            margin-bottom: 2rem;
-        }
-
-        .estrofe {
-            margin-bottom: 1.8rem;
-            font-style: italic;
-            color: #634338;
-            line-height: 1.8;
-            font-size: 0.95rem;
-        }
-
-        .btn-music-float {
-            position: fixed;
-            bottom: 24px;
-            right: 20px;
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
-            z-index: 999;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.2s;
-            backdrop-filter: blur(10px);
-            background: rgba(226, 185, 168, 0.9);
-            color: #48281e;
-            font-size: 1.8rem;
+            z-index: 2000;
+            transition: opacity 0.4s;
         }
 
-        .btn-music-float:active {
-            transform: scale(0.94);
-        }
-
-        .tooltip-music {
-            position: fixed;
-            bottom: 92px;
-            right: 28px;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(8px);
-            padding: 6px 12px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            color: white;
-            font-weight: 400;
-            pointer-events: none;
-            z-index: 1000;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        footer {
+        .modal-card {
+            background: #fff8f0;
+            border-radius: 48px;
+            max-width: 320px;
+            width: 85%;
+            padding: 2rem 1.8rem;
             text-align: center;
-            margin-top: 3rem;
-            font-size: 0.75rem;
-            color: #b4846e;
-            opacity: 0.8;
-            padding-bottom: 2rem;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.4);
+            border: 2px solid #ffb347;
+            animation: popIn 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
         }
 
-        @media (max-width: 550px) {
-            .container {
-                padding: 1rem 1rem 6rem 1rem;
-            }
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-            .timeline-item {
-                flex-direction: column;
-                text-align: center;
-                border-left: none;
-                border-top: 4px solid #e6a088;
-                padding-top: 1.5rem;
-            }
-            .btn-music-float {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-                bottom: 20px;
-                right: 16px;
-            }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-card h2 {
+            font-size: 1.7rem;
+            color: #d44c2f;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-card p {
+            font-size: 0.9rem;
+            color: #4a2e25;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        .modal-card button {
+            background: #ff8c5a;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            border-radius: 50px;
+            font-size: 1rem;
+            color: white;
+            margin-top: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #aa4a2c;
+            transition: 0.05s linear;
+        }
+
+        .modal-card button:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #aa4a2c;
+        }
+
+        .game-wrapper {
+            background: #0f1722e6;
+            border-radius: 48px;
+            padding: 16px 12px 20px;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 550px;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 32px;
+            background: #c0e0ff;
+            width: 100%;
+            height: auto;
+            cursor: none;
+            touch-action: none;
+        }
+
+        .info-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            background: #1e1a2fcc;
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 60px;
+        }
+
+        .score {
+            background: #00000077;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #ffdd99;
+        }
+
+        .score span {
+            font-size: 1.3rem;
+            color: #ff6f61;
+        }
+
+        .phase {
+            background: #ffb34733;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #ffe0b5;
+        }
+
+        button {
+            background: #ffae5a;
+            border: none;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 40px;
+            color: #2c1a1a;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .final-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            flex-direction: column;
+        }
+
+        .final-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .big-heart {
+            font-size: 8rem;
+            animation: pulseHeart 0.8s infinite alternate;
+            filter: drop-shadow(0 0 20px #ff3366);
+            margin-bottom: 20px;
+        }
+
+        @keyframes pulseHeart {
+            from { transform: scale(1); text-shadow: 0 0 5px red; }
+            to { transform: scale(1.2); text-shadow: 0 0 30px #ff6699; }
+        }
+
+        .final-message {
+            background: #fff2df;
+            padding: 24px 20px;
+            border-radius: 48px;
+            max-width: 300px;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 1.5;
+            font-weight: bold;
+            color: #b13e3e;
+            border: 2px solid gold;
+        }
+
+        .close-final {
+            margin-top: 20px;
+            background: gold;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="bg-ornament" id="floatingBg"></div>
-
-<div class="container">
-    
-    <div class="music-notice" style="animation: fadeIn 0.8s ease-out;">
-        <i class="fas fa-play-circle" style="color: #c2785e; margin-right: 5px;"></i> preparei uma canção para você, espero que goste, da um play aí ❤️
+<div id="welcomeModal" class="modal-overlay">
+    <div class="modal-card">
+        <h2>✨ 27 anos ✨</h2>
+        <p>Meu amor, preparei um joguinho especial só para você!<br>Ajude a garotinha a coletar <strong>27 corações e estrelas</strong>.<br>Mas cuidado com os vírus (🦠) e as barreiras (🧱) – eles tiram pontos!<br>O cenário muda a cada 5 itens e a dificuldade aumenta…<br>Você consegue chegar ao final? 💖</p>
+        <button id="startGameBtn">💖 Vamos começar! 💖</button>
     </div>
-
-    <div class="hero">
-        <h1>✧ você, minha oração atendida ✧</h1>
-        <div class="date-chip">
-            <i class="fas fa-calendar-alt"></i> 15 de janeiro de 2026
-        </div>
-        <div class="subtitle">
-            A primeira mensagem no WhatsApp que mudou minha vida
-        </div>
-    </div>
-
-    <div class="card" style="background: transparent; box-shadow: none; padding: 0;">
-        <h2 class="reveal" style="font-family: 'Playfair Display'; text-align: center; margin-bottom: 1.5rem; color:#b7563b;">
-            <i class="fas fa-feather-alt"></i> nossa caminhada
-        </h2>
-        
-        <div class="timeline-item reveal">
-            <div class="timeline-icon"><i class="fab fa-whatsapp"></i></div>
-            <div class="timeline-text">
-                <h3>💬 15 de janeiro · primeiro "oi"</h3>
-                <p>Duas almas que nem sabiam que Deus já estava escrevendo algo eterno. Do simples nasceu o mais lindo.</p>
-            </div>
-        </div>
-        <div class="timeline-item reveal">
-            <div class="timeline-icon"><i class="fas fa-pray"></i></div>
-            <div class="timeline-text">
-                <h3>🙏 orando um pelo outro</h3>
-                <p>Antes de qualquer abraço, já intercedíamos. Sua fé me fortaleceu. Você me ensinou que o Amor verdadeiro nasce no trono da graça.</p>
-            </div>
-        </div>
-        <div class="timeline-item reveal">
-            <div class="timeline-icon"><i class="fas fa-heartbeat"></i></div>
-            <div class="timeline-text">
-                <h3>🌸 se apaixonando a cada dia</h3>
-                <p>Cada conversa, cada detalhe. Eu me apaixono por quem você é, por sua doçura e coragem. Você me completa.</p>
-            </div>
-        </div>
-        <div class="timeline-item reveal">
-            <div class="timeline-icon"><i class="fas fa-church"></i></div>
-            <div class="timeline-text">
-                <h3>✝️ um futuro com Deus no centro</h3>
-                <p>Sonho em construir uma família que louve ao Senhor, ao seu lado. Ser seu marido, seu amigo, seu porto seguro. Quero ser o homem da sua vida.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="card" style="background: transparent; box-shadow: none; padding: 0;">
-        <h2 class="reveal" style="font-family: 'Playfair Display'; text-align: center; color:#b7563b;">📖 versículos que te declaram</h2>
-        <p class="reveal" style="text-align: center; font-size: 0.9rem; margin-bottom: 1.5rem; color:#a35138;">vejo Deus em cada detalhe seu</p>
-        
-        <div class="versiculo-grid">
-            <div class="verse-card reveal"><i class="fas fa-gem"></i><p>“Mulher virtuosa, quem a achará? O seu valor excede ao de rubis.”</p><small>Provérbios 31:10</small></div>
-            <div class="verse-card reveal"><i class="fas fa-dove"></i><p>“Tu és toda formosa, amada minha, e não há mancha em ti.”</p><small>Cantares 4:7</small></div>
-            <div class="verse-card reveal"><i class="fas fa-seedling"></i><p>“Porque eu bem sei os pensamentos que tenho a teu respeito: paz, e não mal.”</p><small>Jeremias 29:11</small></div>
-            <div class="verse-card reveal"><i class="fas fa-hands-helping"></i><p>“O amor é paciente, é benigno. Tudo sofre, tudo crê, tudo espera.”</p><small>1 Coríntios 13:4,7</small></div>
-            <div class="verse-card reveal"><i class="fas fa-crown"></i><p>“A sua família chama-a bem-aventurada. A mulher que teme ao Senhor, essa será louvada.”</p><small>Provérbios 31:28,30</small></div>
-            <div class="verse-card reveal"><i class="fas fa-star-of-life"></i><p>“Ora, o Deus de esperança vos encha de todo o gozo e paz.”</p><small>Romanos 15:13</small></div>
-        </div>
-        
-        <div class="reveal" style="background:#f9e9e1; border-radius: 32px; padding: 1rem; text-align: center; margin-top: 1.5rem; border: 1px solid #ffd5c2;">
-            <i class="fas fa-ring" style="color: #c2785e;"></i> <strong>Mateus 19:6</strong> — “Portanto, o que Deus ajuntou, não o separe o homem.”
-        </div>
-    </div>
-
-    <div class="card declaracao reveal">
-        <h2>💗 meu querer mais sincero</h2>
-        <p class="reveal"><i class="fas fa-quote-left" style="color:#c15e41;"></i> Meu Bem, mesmo nesse momento difícil com seu pai no hospital e você se sentindo frágil, quero que saiba: você é mais forte do que imagina, e eu estou orando por vocês todos os dias. Deus tem cuidado de cada detalhe.</p>
-        <p class="reveal">Você é a <strong>mulher valorosa</strong> que eu escolhi amar. Quero ser o homem da sua vida, te proteger, te abraçar e construir uma família onde Jesus seja o alicerce. <br> Quero viver ao seu lado cada estação, e juntos seguirmos em direção ao coração de Deus.</p>
-        <p class="reveal" style="font-weight: 500;">Eu te vejo como presente dEle. E eu prometo buscar a Deus com você, honrar teu pai e cuidar de você com toda ternura.</p>
-        <p class="reveal" style="font-family: 'Playfair Display'; font-size: 1.3rem; margin-top: 1.5rem; color:#b7563b;">Com todo amor, <br> seu futuro companheiro eterno ♡</p>
-    </div>
-
-    <div class="card reveal" style="background: #fef1ea; text-align: center;">
-        <i class="fas fa-hand-holding-heart" style="font-size: 2.2rem; color:#c2856b;"></i>
-        <p style="margin-top: 0.8rem; line-height: 1.6;">✨ “O Senhor é o teu refúgio e a tua fortaleza” (Salmo 91:2). Meu Amor, você não está só. Estou aqui, orando sem cessar pelo seu pai e pela sua saúde. Sei que Deus está no controle. ❤️‍🩹</p>
-        <p style="margin-top: 0.8rem; font-weight: 500;"><i class="fas fa-praying-hands"></i> descansa no amor dEle e no meu carinho por você.</p>
-    </div>
-
-    <div class="letra-musica">
-        <h2 class="reveal"><i class="fas fa-music" style="font-size: 1.2rem; margin-right: 8px;"></i> Era Você</h2>
-        
-        <p class="estrofe reveal">
-            Eu escrevi tantas orações sem saber o teu nome,<br>
-            pedi a Deus alguém que fosse mais que um sonho…<br>
-            Guardei meu coração, aprendi a confiar,<br>
-            e hoje olhando pra você… eu sei, valeu esperar…
-        </p>
-
-        <p class="estrofe reveal">
-            Cada noite em silêncio, Deus já sabia de nós dois,<br>
-            o que era só oração… hoje vive entre nós…
-        </p>
-
-        <p class="estrofe reveal" style="font-weight: 500; font-size: 1.05rem;">
-            Era você… em cada oração que eu fiz,<br>
-            era você… que Deus já guardava pra mim,<br>
-            sem medo, sem confusão,<br>
-            o amor que veio do céu<br>
-            hoje acalma o meu coração…
-        </p>
-
-        <p class="estrofe reveal">
-            Você é tudo aquilo que eu pedi sem perceber,<br>
-            a resposta mais bonita que eu já pude receber…<br>
-            E quando a gente ora junto, eu entendo o porquê,<br>
-            Deus escreveu nossa história antes da gente se ver…
-        </p>
-
-        <p class="estrofe reveal">
-            Cada detalhe, cada espera, cada “não” que Ele deu,<br>
-            era só Deus preparando eu pra viver você…
-        </p>
-
-        <p class="estrofe reveal" style="font-weight: 500; font-size: 1.05rem;">
-            Era você… em cada oração que eu fiz,<br>
-            era você… que Deus já guardava pra mim,<br>
-            sem medo, sem confusão,<br>
-            o amor que veio do céu<br>
-            hoje acalma o meu coração…
-        </p>
-
-        <p class="estrofe reveal">
-            Se um dia você chorou sem saber quem eu seria,<br>
-            eu também pedi a Deus por você todos os dias…<br>
-            E hoje eu vejo o cuidado em cada direção,<br>
-            duas respostas vivas da mesma oração…
-        </p>
-
-        <p class="estrofe reveal" style="font-family: 'Playfair Display'; font-size: 1.2rem;">
-            Eu escolhi esperar…<br>
-            E Deus me fez te encontrar…<br>
-            A promessa vive em nós…<br>
-            Era você…
-        </p>
-    </div>
-
-    <footer class="reveal">
-        <p style="letter-spacing: 1px;">feito com oração e gratidão • nossa história é um louvor</p>
-        <p style="margin-top: 8px;"><i class="fas fa-infinity"></i> <i class="fas fa-church"></i></p>
-    </footer>
 </div>
 
-<button id="floatMusicBtn" class="btn-music-float" aria-label="Tocar música ambiente">
-    <i class="fas fa-headphones"></i>
-</button>
-<div id="musicTooltip" class="tooltip-music">🎵 ambiente suave</div>
+<div class="game-wrapper" id="gameWrapper" style="display: none;">
+    <canvas id="gameCanvas" width="500" height="600"></canvas>
+    <div class="info-panel">
+        <div class="score">❤️ <span id="scoreValue">0</span> / 27</div>
+        <div class="phase" id="phaseName">🌸 Fase 1: Descoberta</div>
+        <button id="resetGameBtn">↺ Reiniciar</button>
+    </div>
+    <div style="text-align: center; margin-top: 12px; font-size: 0.65rem; color:#ffdd99;">👉 Deslize o dedo (ou mouse) para mover a personagem</div>
+</div>
+
+<div id="finalOverlay" class="final-overlay">
+    <div class="big-heart">❤️</div>
+    <div class="final-message" id="finalMessageText"></div>
+    <div class="close-final" id="closeFinalBtn">Fechar</div>
+</div>
 
 <script>
-    // Configuração do Scroll Reveal aprimorado (efeito cascata)
-    const revealElements = document.querySelectorAll('.reveal');
-    
-    // Ajustei o rootMargin: só vai revelar quando o elemento subir 15% da tela,
-    // garantindo que ele não carregue enquanto estiver só "espiando" embaixo.
-    const observerOptions = {
-        threshold: 0.1, 
-        rootMargin: "0px 0px -15% 0px"
-    };
+    (function(){
+        // ---------------- CONFIGURAÇÕES ----------------
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let CW = 500, CH = 600;
+        canvas.width = CW;
+        canvas.height = CH;
 
-    const observer = new IntersectionObserver((entries) => {
-        let delay = 0;
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !entry.target.classList.contains('active')) {
-                setTimeout(() => {
-                    entry.target.classList.add('active');
-                }, delay);
-                delay += 150; 
-                observer.unobserve(entry.target); 
+        // Personagem (menor para dificultar)
+        const GIRL_W = 34;
+        const GIRL_H = 44;
+        let girlX = CW/2 - GIRL_W/2;
+        const GIRL_Y = CH - 75;
+
+        let items = [];
+        let score = 0;
+        let gameActive = true;
+        let gameWin = false;
+        let currentPhase = 0;
+        let itemBaseSpeed = 3.8;
+        let spawnChance = 0.045;
+        let badItemChance = 0.55;
+        let barrierChance = 0.35;
+
+        let floatingTexts = [];
+        let confetti = [];
+
+        // Fases com cenários e dificuldade progressiva (mantive as cores e descrições fofas)
+        const phaseData = [
+            { name: "🌸 Fase 1: Descoberta", bgTop: "#ffe0c4", bgBottom: "#ffbc8c", ground: "#7cb518", speed: 3.8, spawnRate: 0.045, badRate: 0.55, barrierRate: 0.30 },
+            { name: "🍭 Fase 2: Aventura", bgTop: "#ffcfdf", bgBottom: "#ffa5c0", ground: "#ad7a4c", speed: 4.5, spawnRate: 0.050, badRate: 0.62, barrierRate: 0.38 },
+            { name: "🌻 Fase 3: Desafios", bgTop: "#f9e0a0", bgBottom: "#f7b05e", ground: "#588b3e", speed: 5.2, spawnRate: 0.055, badRate: 0.70, barrierRate: 0.45 },
+            { name: "⚡ Fase 4: Superação", bgTop: "#c5e0ff", bgBottom: "#9ec1f0", ground: "#947544", speed: 5.9, spawnRate: 0.060, badRate: 0.78, barrierRate: 0.52 },
+            { name: "🔥 Fase 5: Paixão", bgTop: "#ffc8a2", bgBottom: "#ff8c5a", ground: "#b56333", speed: 6.6, spawnRate: 0.065, badRate: 0.85, barrierRate: 0.60 },
+            { name: "💎 Fase Final: Amor Eterno", bgTop: "#f2b5d4", bgBottom: "#e66a8c", ground: "#d49b3b", speed: 7.2, spawnRate: 0.070, badRate: 0.90, barrierRate: 0.65 }
+        ];
+
+        function updatePhaseByScore() {
+            let newPhase = 0;
+            if (score >= 25) newPhase = 5;
+            else if (score >= 20) newPhase = 4;
+            else if (score >= 15) newPhase = 3;
+            else if (score >= 10) newPhase = 2;
+            else if (score >= 5) newPhase = 1;
+            else newPhase = 0;
+            
+            if (newPhase !== currentPhase) {
+                currentPhase = newPhase;
+                const data = phaseData[currentPhase];
+                itemBaseSpeed = data.speed;
+                spawnChance = data.spawnRate;
+                badItemChance = data.badRate;
+                barrierChance = data.barrierRate;
+                document.getElementById('phaseName').innerText = data.name;
+                for(let i=0;i<20;i++) createConfetti();
+                showFloatingMessage(`✨ ${data.name} ✨`, CW/2, 80, 18);
             }
-        });
-    }, observerOptions);
+        }
 
-    revealElements.forEach(el => observer.observe(el));
+        function spawnItem() {
+            if(!gameActive || gameWin) return;
+            if(items.length >= 20) return;
+            const rand = Math.random();
+            let type = 'heart';
+            if(rand < badItemChance) {
+                if(Math.random() < barrierChance) type = 'barrier';
+                else type = 'virus';
+            } else {
+                type = Math.random() < 0.7 ? 'heart' : 'star';
+            }
+            
+            const x = Math.random() * (CW - 32);
+            items.push({
+                x: x, y: -40, w: 32, h: 32,
+                type: type
+            });
+        }
 
-    // ---------- MÚSICA HOSPEDADA NA RAIZ ----------
-    const MUSIC_URL = "ambiente.mp3"; 
+        function collectItem(index) {
+            const item = items[index];
+            let delta = 0;
+            if(item.type === 'heart' || item.type === 'star') delta = 1;
+            else delta = -1;
+            
+            if(delta > 0) {
+                score = Math.min(score + delta, 27);
+                showFloatingMessage("+1 💖", girlX+GIRL_W/2, GIRL_Y-10, 20);
+                for(let i=0;i<5;i++) createConfetti();
+            } else {
+                score = Math.max(score + delta, 0);
+                if(item.type === 'virus') showFloatingMessage("-1 🦠", girlX+GIRL_W/2, GIRL_Y-15, 20);
+                else showFloatingMessage("-1 🧱", girlX+GIRL_W/2, GIRL_Y-15, 20);
+                canvas.style.transform = "translateX(3px)";
+                setTimeout(()=> canvas.style.transform = "", 100);
+                for(let i=0;i<3;i++) createConfetti();
+            }
+            updateScoreUI();
+            items.splice(index,1);
+            
+            if(score >= 27 && !gameWin) {
+                gameWin = true;
+                gameActive = false;
+                finalVictory();
+            } else {
+                updatePhaseByScore();
+            }
+        }
 
-    let audio = null;
-    let isPlaying = false;
-    let musicLoadFailed = false;
-    const musicBtn = document.getElementById('floatMusicBtn');
-    const tooltip = document.getElementById('musicTooltip');
+        function updateScoreUI() {
+            document.getElementById('scoreValue').innerText = score;
+        }
 
-    function initAudio() {
-        if (!audio && !musicLoadFailed) {
-            audio = new Audio(MUSIC_URL);
-            audio.loop = true;
-            audio.volume = 0.2; 
-            audio.preload = "auto";
-            audio.onerror = () => {
-                musicLoadFailed = true;
-                audio = null;
-                if (musicBtn) {
-                    musicBtn.style.background = "#bda89c";
-                    musicBtn.innerHTML = '<i class="fas fa-music-slash"></i>';
-                    showTooltip("🎵 arquivo não encontrado");
+        function finalVictory() {
+            gameActive = false;
+            const finalMsgDiv = document.getElementById('finalMessageText');
+            // Mensagem carinhosa original
+            finalMsgDiv.innerHTML = `✨ PARABÉNS, MEU AMOR! ✨<br><br>
+Você chegou às suas 27 primaveras! 🎂🌸<br>
+Eu não pude estar nas 26 anteriores,<br>
+mas a partir de agora quero viver CADA primavera ao seu lado.<br><br>
+Obrigado por deixar eu fazer parte da sua história.<br>
+Te amo mais do que todas as estrelas! 💖<br><br>
+Feliz Aniversário! 🎉`;
+            document.getElementById('finalOverlay').classList.add('show');
+        }
+
+        function updateItems() {
+            for(let i=0;i<items.length;i++) {
+                items[i].y += itemBaseSpeed;
+                const itemRect = {x: items[i].x, y: items[i].y, w: 32, h: 32};
+                const girlRect = {x: girlX, y: GIRL_Y, w: GIRL_W, h: GIRL_H};
+                if(itemRect.x < girlRect.x+girlRect.w && itemRect.x+itemRect.w > girlRect.x &&
+                   itemRect.y < girlRect.y+girlRect.h && itemRect.y+itemRect.h > girlRect.y) {
+                    collectItem(i);
+                    i--;
+                    continue;
                 }
-            };
-        }
-        return audio;
-    }
-
-    function showTooltip(text, duration = 2000) {
-        if (tooltip) {
-            tooltip.innerText = text;
-            tooltip.style.opacity = "1";
-            setTimeout(() => {
-                tooltip.style.opacity = "0";
-            }, duration);
-        }
-    }
-
-    function toggleMusic() {
-        if (musicLoadFailed) {
-            showTooltip("❌ adicione o arquivo .mp3");
-            return;
-        }
-        const audioPlayer = initAudio();
-        if (!audioPlayer) return;
-
-        if (isPlaying) {
-            audioPlayer.pause();
-            isPlaying = false;
-            musicBtn.innerHTML = '<i class="fas fa-headphones"></i>';
-            musicBtn.style.background = "#e2b9a8";
-            showTooltip("🎵 música pausada");
-        } else {
-            const playPromise = audioPlayer.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    isPlaying = true;
-                    musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                    musicBtn.style.background = "#cb9a82";
-                    showTooltip("♫ Era Você ♫");
-                }).catch(err => {
-                    console.warn("Reprodução bloqueada:", err);
-                    showTooltip("⚠️ toque novamente para tocar");
-                });
+                if(items[i] && items[i].y > CH+80) {
+                    items.splice(i,1);
+                    i--;
+                }
             }
         }
-    }
 
-    if (musicBtn) {
-        musicBtn.addEventListener('click', (e) => {
+        function trySpawn() {
+            if(!gameActive || gameWin) return;
+            if(Math.random() < spawnChance && items.length < 25) {
+                spawnItem();
+                if(Math.random() < 0.3 && items.length < 23) spawnItem();
+            }
+        }
+
+        // Desenhos (mantido o estilo fofo)
+        function drawBackground() {
+            const phase = phaseData[currentPhase];
+            const grad = ctx.createLinearGradient(0,0,0,CH);
+            grad.addColorStop(0, phase.bgTop);
+            grad.addColorStop(1, phase.bgBottom);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0,0,CW,CH);
+            ctx.fillStyle = "#ffffffaa";
+            ctx.beginPath();
+            ctx.ellipse(80, 70, 45, 35, 0, 0, Math.PI*2);
+            ctx.ellipse(130, 50, 50, 40, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(400, 100, 55, 40, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = phase.ground;
+            ctx.fillRect(0, CH-45, CW, 50);
+            ctx.fillStyle = "#6b4c2c";
+            for(let i=0;i<12;i++) {
+                ctx.beginPath();
+                ctx.moveTo(i*50, CH-45);
+                ctx.lineTo(i*50+25, CH-65);
+                ctx.lineTo(i*50+50, CH-45);
+                ctx.fill();
+            }
+        }
+
+        function drawGirl() {
+            const x = girlX, y = GIRL_Y;
+            ctx.save();
+            ctx.fillStyle = "#f25b5b";
+            ctx.beginPath();
+            ctx.ellipse(x+GIRL_W/2, y+22, 14, 22, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = "#dd4a4a";
+            ctx.beginPath();
+            ctx.ellipse(x+GIRL_W/2, y+32, 10, 12, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = "#fcd7a0";
+            ctx.beginPath();
+            ctx.ellipse(x+GIRL_W/2, y+12, 12, 14, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = "#442211";
+            ctx.beginPath();
+            ctx.arc(x+10, y+10, 2, 0, Math.PI*2);
+            ctx.arc(x+GIRL_W-10, y+10, 2, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc(x+9, y+9, 0.8, 0, Math.PI*2);
+            ctx.arc(x+GIRL_W-11, y+9, 0.8, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x+GIRL_W/2, y+17, 4, 0.05, Math.PI-0.05);
+            ctx.strokeStyle = "#b34e30";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.fillStyle = "#a65d3a";
+            ctx.beginPath();
+            ctx.ellipse(x+GIRL_W/2, y+4, 14, 12, 0, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = "#ff88aa";
+            ctx.beginPath();
+            ctx.moveTo(x+20, y-4);
+            ctx.lineTo(x+27, y-9);
+            ctx.lineTo(x+24, y-1);
+            ctx.fill();
+            ctx.fillStyle = "#ff6680";
+            ctx.beginPath();
+            ctx.ellipse(x+30, y+14, 7, 9, 0.5, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = "#fff2b5";
+            ctx.font = "bold 9px monospace";
+            ctx.fillText("27", x+27, y+18);
+            ctx.restore();
+        }
+
+        function drawItem(item) {
+            if(item.type === 'heart') {
+                ctx.fillStyle = "#ff3366";
+                ctx.shadowBlur = 6;
+                ctx.beginPath();
+                const cx = item.x+16, cy=item.y+16;
+                ctx.moveTo(cx, cy+5);
+                ctx.bezierCurveTo(cx-12, cy-5, cx-18, cy+8, cx, cy+18);
+                ctx.bezierCurveTo(cx+18, cy+8, cx+12, cy-5, cx, cy+5);
+                ctx.fill();
+            } else if(item.type === 'star') {
+                ctx.fillStyle = "#f7d44a";
+                ctx.shadowBlur = 6;
+                const cx=item.x+16, cy=item.y+16;
+                ctx.beginPath();
+                for(let i=0;i<10;i++) {
+                    let rad = (i * Math.PI*2/10);
+                    let r = i%2===0 ? 12 : 6;
+                    let xp = cx + Math.cos(rad)*r;
+                    let yp = cy + Math.sin(rad)*r;
+                    if(i===0) ctx.moveTo(xp,yp);
+                    else ctx.lineTo(xp,yp);
+                }
+                ctx.fill();
+            } else if(item.type === 'virus') {
+                ctx.fillStyle = "#5f9e5e";
+                ctx.beginPath();
+                ctx.arc(item.x+16, item.y+16, 14, 0, Math.PI*2);
+                ctx.fill();
+                ctx.fillStyle = "#a53f2b";
+                ctx.font = "bold 24px monospace";
+                ctx.fillText("🦠", item.x+6, item.y+28);
+            } else {
+                ctx.fillStyle = "#8b5a2b";
+                ctx.fillRect(item.x+4, item.y+4, 24, 24);
+                ctx.fillStyle = "#c97e3a";
+                ctx.fillRect(item.x+8, item.y+8, 16, 16);
+                ctx.fillStyle = "#5a3a1a";
+                ctx.font = "20px monospace";
+                ctx.fillText("🧱", item.x+8, item.y+28);
+            }
+            ctx.shadowBlur = 0;
+        }
+
+        function showFloatingMessage(text, x, y, size=18) {
+            floatingTexts.push({text, x, y, life: 1.0, size});
+        }
+
+        function drawFloatingTexts() {
+            for(let i=0;i<floatingTexts.length;i++) {
+                const t = floatingTexts[i];
+                ctx.font = `bold ${t.size}px "Segoe UI"`;
+                ctx.fillStyle = `rgba(255,80,100,${t.life})`;
+                ctx.fillText(t.text, t.x-20, t.y - (1-t.life)*25);
+                t.life -= 0.03;
+                t.y -= 1;
+                if(t.life <= 0) floatingTexts.splice(i,1), i--;
+            }
+        }
+
+        function createConfetti() {
+            confetti.push({
+                x: Math.random()*CW, y: -5, size: Math.random()*5+2,
+                color: `hsl(${Math.random()*360}, 80%, 65%)`,
+                speedY: Math.random()*4+2, speedX: (Math.random()-0.5)*2.5
+            });
+        }
+
+        function drawConfetti() {
+            for(let i=0;i<confetti.length;i++) {
+                ctx.fillStyle = confetti[i].color;
+                ctx.fillRect(confetti[i].x, confetti[i].y, confetti[i].size, confetti[i].size);
+                confetti[i].x += confetti[i].speedX;
+                confetti[i].y += confetti[i].speedY;
+                if(confetti[i].y > CH+50) confetti.splice(i,1), i--;
+            }
+        }
+
+        // Movimento
+        function handleMove(clientX) {
+            if(gameWin) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = CW / rect.width;
+            let canvasX = (clientX - rect.left) * scaleX;
+            canvasX = Math.min(Math.max(canvasX, 5), CW - GIRL_W - 5);
+            girlX = canvasX;
+        }
+
+        function onMove(e) {
             e.preventDefault();
-            toggleMusic();
-            musicBtn.style.transform = "scale(0.92)";
-            setTimeout(() => { if (musicBtn) musicBtn.style.transform = ""; }, 150);
-        });
-        
-        musicBtn.addEventListener('mouseenter', () => { 
-            tooltip.style.opacity = "1"; 
-            if(isPlaying) tooltip.innerText = "Pausar música";
-            else tooltip.innerText = "Tocar música";
-        });
-        musicBtn.addEventListener('mouseleave', () => { tooltip.style.opacity = "0"; });
-    }
+            if(gameWin) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            handleMove(clientX);
+        }
 
-    // Fundo decorativo
-    window.addEventListener('load', () => {
-        const bgContainer = document.getElementById('floatingBg');
-        if (bgContainer) {
-            const icons = ['🌸', '🕊️', '✨', '❤️', '🌿', '🌟', '💗'];
-            for (let i = 0; i < 40; i++) {
-                const el = document.createElement('div');
-                el.classList.add('float-flower');
-                el.innerHTML = icons[Math.floor(Math.random() * icons.length)];
-                el.style.fontSize = (Math.random() * 1.6 + 0.8) + 'rem';
-                el.style.left = Math.random() * 100 + '%';
-                el.style.animationDuration = Math.random() * 18 + 12 + 's';
-                el.style.animationDelay = Math.random() * 15 + 's';
-                el.style.opacity = Math.random() * 0.2 + 0.08;
-                bgContainer.appendChild(el);
+        function onStart(e) {
+            e.preventDefault();
+            if(gameWin) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            handleMove(clientX);
+        }
+
+        function updateGame() {
+            if(!gameActive && !gameWin) return;
+            if(gameActive && !gameWin) {
+                trySpawn();
+                updateItems();
+            }
+            if(confetti.length < 50 && (gameWin || Math.random()<0.05)) createConfetti();
+            for(let i=0;i<confetti.length;i++) {
+                confetti[i].y += confetti[i].speedY;
+                confetti[i].x += confetti[i].speedX;
+                if(confetti[i].y > CH+60) confetti.splice(i,1), i--;
             }
         }
-    });
+
+        function draw() {
+            drawBackground();
+            for(let i of items) drawItem(i);
+            drawGirl();
+            drawFloatingTexts();
+            drawConfetti();
+            if(gameWin && !document.getElementById('finalOverlay').classList.contains('show')) {
+                ctx.font = "bold 20px monospace";
+                ctx.fillStyle = "#ffaa66";
+                ctx.fillText("✨ VITÓRIA! ✨", CW/2-80, 70);
+            }
+        }
+
+        function gameLoop() {
+            updateGame();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function resetGame() {
+            gameActive = true;
+            gameWin = false;
+            score = 0;
+            items = [];
+            confetti = [];
+            floatingTexts = [];
+            currentPhase = 0;
+            const data = phaseData[0];
+            itemBaseSpeed = data.speed;
+            spawnChance = data.spawnRate;
+            badItemChance = data.badRate;
+            barrierChance = data.barrierRate;
+            updateScoreUI();
+            document.getElementById('phaseName').innerText = data.name;
+            girlX = CW/2 - GIRL_W/2;
+            document.getElementById('finalOverlay').classList.remove('show');
+        }
+
+        function initGame() {
+            resetGame();
+            canvas.addEventListener('mousemove', onMove);
+            canvas.addEventListener('touchmove', onMove, {passive: false});
+            canvas.addEventListener('touchstart', onStart, {passive: false});
+            canvas.addEventListener('mousedown', onStart);
+            document.getElementById('resetGameBtn').addEventListener('click', () => resetGame());
+            document.getElementById('closeFinalBtn').addEventListener('click', () => {
+                document.getElementById('finalOverlay').classList.remove('show');
+                resetGame();
+            });
+            gameLoop();
+        }
+
+        const modal = document.getElementById('welcomeModal');
+        const startBtn = document.getElementById('startGameBtn');
+        startBtn.addEventListener('click', () => {
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('gameWrapper').style.display = 'block';
+                initGame();
+            }, 300);
+        });
+    })();
 </script>
 </body>
 </html>
